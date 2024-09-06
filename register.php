@@ -1,6 +1,6 @@
 <?php
 require_once("DBconnect.php");
-
+// This project is by Reshad
 // Function to generate a random 10-character alphanumeric user ID
 function generateUserId($length = 10) {
     
