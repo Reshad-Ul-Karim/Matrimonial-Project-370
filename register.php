@@ -12,6 +12,7 @@ function generateUserId($length = 10) {
     }
     return $randomString;
 }
+//The function to generate user id is working
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
