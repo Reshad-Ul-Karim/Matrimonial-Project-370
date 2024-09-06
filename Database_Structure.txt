@@ -1,0 +1,120 @@
+-- Address table for normalized location
+CREATE TABLE Address(
+  address_id INT NOT NULL AUTO_INCREMENT,
+  road_number VARCHAR(50) NOT NULL,
+  street_number VARCHAR(50) NOT NULL,
+  building_number VARCHAR(50) NOT NULL,
+  PRIMARY KEY (address_id)
+);
+-- User table with custom user_id
+CREATE TABLE User(
+  user_id VARCHAR(10) NOT NULL,  -- Custom user_id
+  Email VARCHAR(255) NOT NULL,
+  Password VARCHAR(255) NOT NULL,  -- Store hashed passwords (bcrypt/argon2)
+  Profession VARCHAR(100) NOT NULL,
+  DOB DATE NOT NULL,
+  Gender ENUM('Male', 'Female', 'Other') NOT NULL,
+  Religion ENUM('Christian', 'Muslim', 'Hindu', 'Buddhist', 'Jewish', 'Atheist', 'Other') NOT NULL,
+  Ethnicity VARCHAR(50) NOT NULL,
+  First_Name VARCHAR(50) NOT NULL,
+  Middle_Name VARCHAR(50) NULL,
+  Last_Name VARCHAR(50) NOT NULL,
+  Registration_Date DATE NOT NULL,
+  Account_Status ENUM('Active', 'Inactive', 'Suspended') NOT NULL,
+  Profile_Photo_URL VARCHAR(255) NULL,
+  Photos_URL VARCHAR(255) NULL,
+  NID VARCHAR(20) NOT NULL,
+  address_id INT NULL,  -- Link to Address table
+  PRIMARY KEY (user_id),
+  UNIQUE (Email),
+  UNIQUE (NID),
+  FOREIGN KEY (address_id) REFERENCES Address(address_id) ON DELETE CASCADE,  -- Foreign key reference to Address table
+  INDEX idx_email (Email),
+  INDEX idx_profession (Profession),
+  INDEX idx_religion (Religion)
+);
+-- Admin table for admin users
+CREATE TABLE Admin(
+  Admin_id INT NOT NULL AUTO_INCREMENT,
+  Username VARCHAR(100) NOT NULL,
+  Password VARCHAR(255) NOT NULL,
+  PRIMARY KEY (Admin_id),
+  UNIQUE (Username)
+);
+
+-- User_Admin table to map admins to users
+CREATE TABLE User_Admin(
+  Admin_id INT NOT NULL,
+  user_id VARCHAR(10) NOT NULL,
+  PRIMARY KEY (Admin_id, user_id),
+  FOREIGN KEY (Admin_id) REFERENCES Admin(Admin_id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
+);
+
+-- Profile_Details table for extended user profiles
+CREATE TABLE Profile_Details(
+  user_id VARCHAR(10) NOT NULL,
+  Secondary_Education VARCHAR(255) NOT NULL,
+  Higher_Secondary VARCHAR(255) NOT NULL,
+  Undergrade VARCHAR(255) NULL,
+  Post_Grade VARCHAR(255) NULL,
+  Marital_Status ENUM('Single', 'Married', 'Divorced', 'Widowed') NOT NULL,
+  Interest TEXT NULL,
+  Hobbies TEXT NULL,
+  Height DECIMAL(4, 2) NOT NULL,
+  Weight DECIMAL(5, 2) NOT NULL,
+  Complexion ENUM('Fair', 'Medium', 'Dark', 'Olive', 'Tan') NOT NULL,
+  Biography TEXT NOT NULL,
+  Family_Background TEXT NULL,
+  PRIMARY KEY (user_id),
+  FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
+);
+
+-- Preferences table to store user preferences
+CREATE TABLE Preferences(
+  user_id VARCHAR(10) NOT NULL,
+  preferred_religion ENUM('Christian', 'Muslim', 'Hindu', 'Buddhist', 'Jewish', 'Atheist', 'Other') NULL,
+  preferred_height INT NULL,
+  preferred_ethnicity VARCHAR(50) NULL,
+  preferred_pets ENUM('Dogs', 'Cats', 'Birds', 'No Pets', 'Other') NULL,
+  preferred_gender ENUM('Male', 'Female', 'Other') NULL,
+  PRIMARY KEY (user_id),
+  FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
+);
+
+-- Messages table for communication between users
+CREATE TABLE Messages(
+  message_id INT NOT NULL AUTO_INCREMENT,
+  sender_id VARCHAR(10) NOT NULL,
+  receiver_id VARCHAR(10) NOT NULL,
+  message_text TEXT NOT NULL,
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (message_id),
+  FOREIGN KEY (sender_id) REFERENCES User(user_id) ON DELETE CASCADE,
+  FOREIGN KEY (receiver_id) REFERENCES User(user_id) ON DELETE CASCADE
+);
+
+-- Audit log table for user activities
+CREATE TABLE User_Activity_Log (
+  log_id INT NOT NULL AUTO_INCREMENT,
+  user_id VARCHAR(10) NOT NULL,
+  activity VARCHAR(255) NOT NULL,
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (log_id),
+  FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
+);
+
+-- Index for scalability on registration date
+CREATE INDEX idx_user_registration_date ON User(Registration_Date);
+CREATE TABLE Request(
+  request_id INT NOT NULL AUTO_INCREMENT,
+  sender_id VARCHAR(10) NOT NULL,
+  receiver_id VARCHAR(10) NOT NULL,
+  request_status ENUM('Pending', 'Accepted', 'Declined', 'Cancelled') NOT NULL,
+  request_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (request_id),
+  FOREIGN KEY (sender_id) REFERENCES User(user_id) ON DELETE CASCADE,
+  FOREIGN KEY (receiver_id) REFERENCES User(user_id) ON DELETE CASCADE,
+  INDEX idx_sender_id (sender_id),
+  INDEX idx_receiver_id (receiver_id)
+);
