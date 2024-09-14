@@ -1,48 +1,27 @@
 <?php
-require_once("DBconnect.php");
-function generateUserId($length = 10) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charactersLength = strlen($characters);
-    $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, $charactersLength - 1)];
-    }
-    return $randomString;
-}
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Connect to the database (use your DBconnect file)
+    require 'DBconnect.php';
+    
+    // Sanitize and collect form inputs
+    $firstName = htmlspecialchars($_POST['first_name']);
+    $middleName = htmlspecialchars($_POST['middle_name']);
+    $lastName = htmlspecialchars($_POST['last_name']);
+    $dob = htmlspecialchars($_POST['dob']);
+    $gender = htmlspecialchars($_POST['gender']);
+    $profession = htmlspecialchars($_POST['profession']);
+    $email = htmlspecialchars($_POST['email']);
+    $city = htmlspecialchars($_POST['city']);
+    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $password = mysqli_real_escape_string($conn, $_POST['password']);
-    $firstName = mysqli_real_escape_string($conn, $_POST['first_name']);
-    $lastName = mysqli_real_escape_string($conn, $_POST['last_name']);
-    $dob = mysqli_real_escape_string($conn, $_POST['dob']);
-    $gender = mysqli_real_escape_string($conn, $_POST['gender']);
-    $religion = mysqli_real_escape_string($conn, $_POST['religion']);
-    $ethnicity = mysqli_real_escape_string($conn, $_POST['ethnicity']);
-    $profession = mysqli_real_escape_string($conn, $_POST['profession']);
-    $nid = mysqli_real_escape_string($conn, $_POST['nid']);
-    $registrationDate = date('Y-m-d');  // Assuming registration date is today
-
-    // Check if email already exists
-    $checkEmailQuery = "SELECT Email FROM User WHERE Email = '$email'";
-    $result = mysqli_query($conn, $checkEmailQuery);
-    if (mysqli_num_rows($result) > 0) {
-        echo "Email already exists!";
+    // Insert the data into the database (table: users)
+    $query = "INSERT INTO users (first_name, middle_name, last_name, dob, gender, profession, email, city, password) 
+              VALUES ('$firstName', '$middleName', '$lastName', '$dob', '$gender', '$profession', '$email', '$city', '$password')";
+    
+    if (mysqli_query($conn, $query)) {
+        echo "Profile Created Successfully!";
     } else {
-        // Generate a unique user_id
-        $user_id = generateUserId();
-
-        // Password hashing for security
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-        // Insert the new user with the unique user_id
-        $sql = "INSERT INTO User (user_ID, Email, Password, First_Name, Last_Name, DOB, Gender, Religion, Ethnicity, Profession, NID, Registration_Date) VALUES ('$user_id', '$email', '$hashed_password', '$firstName', '$lastName', '$dob', '$gender', '$religion', '$ethnicity', '$profession', '$nid', '$registrationDate')";
-        if (mysqli_query($conn, $sql)) {
-            echo "Registration successful!";
-            header("Location: index.php"); // Redirect to login page after successful registration
-        } else {
-            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-        }
+        echo "Error: " . mysqli_error($conn);
     }
 }
 ?>
@@ -99,7 +78,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: white;
             border: none;
             border-radius: 5px;
-            margin-top: 10px;
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease;
@@ -172,12 +150,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div class="profile-container">
     <h2>Create Your Profile</h2>
-    <form method="POST" action="">
+    <form method="POST">
         <label for="first_name">First Name</label>
         <input type="text" name="first_name" id="first_name" required>
-
-        <label for="middle_name">Middle Name</label>
-        <input type="text" name="middle_name" id="middle_name">
 
         <label for="last_name">Last Name</label>
         <input type="text" name="last_name" id="last_name" required>
@@ -192,23 +167,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <option value="Other">Other</option>
         </select>
 
+    
+
         <label for="profession">Profession</label>
         <input type="text" name="profession" id="profession" required>
+
+        <label for="religion">Religion</label>
+        <input type="text" name="city" id="religion" required>
+
+       
+        <label for="city">City</label>
+        <input type="text" name="city" id="city" required>
+
+        <label for="ethnicity">Ethnicity</label>
+        <input type="text" name="ethnicity" id="ethnicity" required>
 
         <label for="email">Email</label>
         <input type="email" name="email" id="email" required>
 
+        <label for="nid">NID NO.</label>
+        <input type="text" name="nid" id="nid" required>
+
         <label for="password">Password</label>
         <input type="password" name="password" id="password" required>
 
-        <label for="city">City</label>
-        <input type="text" name="city" id="city" required>
+        <label for="regdate">Registration Date</label>
+        <input type="date" name="regdate" id="regdate" required>
+
 
         <button type="submit" class="submit-btn">Create Profile</button>
-        </br>
-        <button type="button" class="submit-btn" onclick="window.location='index.php';">Already have an account?</button>
-
-</div>
     </form>
 </div>
 

@@ -6,7 +6,7 @@ require_once("DBconnect.php");
 
 // Check if the user is already logged in, redirect to home.php if true
 if (isset($_SESSION['user_id'])) {
-  header('Location: home.php');
+  header('Location: dashboard.php');
   exit;
 }
 
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           if (password_verify($password, $row['Password'])) {
               $_SESSION['user_id'] = $row['user_id'];
               $_SESSION['email'] = $email;
-              header("Location: home.php");
+              header("Location: dashboard.php");
               exit;
           } else {
               $error = 'Invalid password!';
