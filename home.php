@@ -251,12 +251,12 @@
 
     <!-- Floating Chat Button -->
     <div class="floating-chat-btn" onclick="location.href='chatapp/index.php'">
-        <img src="img/party.png" alt="Chat" />
+        <img src="party.png" alt="Chat" />
     </div>
 
     <!-- Floating Customer Support Button -->
     <div class="floating-support-btn" onclick="location.href='https://bangladesh.gov.bd/site/page/aaebba14-f52a-4a3d-98fd-a3f8b911d3d9'">
-        <img src="img/customer-service.png" alt="Support" />
+        <img src="customer-service.png" alt="Support" />
     </div>
 
     <script>

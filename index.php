@@ -46,37 +46,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Login - Matrimonial Hub</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Product+Sans&display=swap');
-        body {
-            font-family: 'Product Sans', Arial, sans-serif;
-            /* background: linear-gradient(135deg, #B32800, #7F0000, #E9A200); */
-            background-image: url('login.png');
-            background-size: cover;
-            background-position: center;
-            height: 100vh;
+        
+        body, html {
+            height: 100%;
             margin: 0;
             padding: 0;
-            justify-content: center;
-            display: flex;
-            align-items: center;
+            font-family: 'Product Sans', Arial, sans-serif;
         }
+
+        /* Video Styling */
+        #bg-video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            background-size: cover;
+        }
+
         .container {
             max-width: 500px;
             margin: 100px auto;
             padding: 40px;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.9); /* Transparent white background */
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+            position: relative;
+        }
+
         h2 {
-            font-size: 24;
+            font-size: 24px;
+            text-align: center;
         }
-        }
+
         form {
             margin-top: 20px;
         }
+
         label {
             font-weight: bold;
             font-size: 18px;
         }
+
         input[type="email"], input[type="password"] {
             width: calc(100% - 20px);
             padding: 15px;
@@ -86,8 +101,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             box-sizing: border-box;
             transition: border-color 0.3s ease;
             font-size: 16px;
-
         }
+
         button[type="submit"] {
             background-color: #c2155b;
             color: white;
@@ -95,18 +110,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border: none;
             cursor: pointer;
             width: 100%;
-            transition: background-color 0.3s ease
+            transition: background-color 0.3s ease;
         }
+
         button[type="submit"]:hover {
             background-color: #ad1457;
         }
+
         .error {
             color: red;
             font-size: 14px;
         }
+
+        p {
+            text-align: center;
+        }
+
+        a {
+            color: #c2155b;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
-<body id = "product-sans">
+<body>
+    <!-- Background Video -->
+    <video autoplay muted loop id="bg-video">
+        <source src="weddingbackground.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
     <div class="container">
         <h2>Login to Matrimonial Hub</h2>
         <?php if ($error): ?>
@@ -120,9 +156,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             <button type="submit" class="btn">Login</button>
         </form>
-        <?php if ($error): ?>
-              <p class="error"><?php echo $error; ?></p>
-        <?php endif; ?>
         <p>Don't have an account? <a href="register.php">Register here</a></p>
     </div>
 </body>

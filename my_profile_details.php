@@ -67,13 +67,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         );
 
         if ($stmt->execute()) {
-            echo "Profile updated successfully!";
+            echo "<script>alert('Profile updated successfully!');</script>"; // Changed echo to alert
         } else {
-            echo "Error updating profile.";
+            echo "<script>alert('Error updating profile.');</script>"; // Changed echo to alert
         }
         $stmt->close();
     } else {
-        echo "Error in query execution.";
+        echo "<script>alert('Error in query execution.');</script>"; // Changed echo to alert
     }
 }
 
@@ -141,13 +141,15 @@ $conn->close();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Product+Sans&display=swap');
         /* Styling for the form */
         body {
             margin: 0;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Product Sans', Arial, sans-serif;
             background: linear-gradient(135deg, #ff6f61, #ffe5b4);
             min-height: 100vh;
             display: flex;
@@ -173,7 +175,7 @@ $conn->close();
         }
         input[type="checkbox"] { margin-right: 10px; }
         input:focus, select:focus, textarea:focus { border-color: #ff6f61; outline: none; }
-        .submit-btn { width: 100%; padding: 10px; background-color: #ff6f61; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s ease; }
+        .submit-btn { margin:2px; width: 100%; padding: 10px; background-color: #ff6f61; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s ease; }
         .submit-btn:hover { background-color: #ff4f41; }
         h2 { text-align: center; color: #ff6f61; margin-bottom: 20px; }
         label { display: block; font-weight: bold; margin-bottom: 5px; }
@@ -205,6 +207,26 @@ $conn->close();
             <option value="Male" <?= ($gender == 'Male') ? 'selected' : '' ?>>Male</option>
             <option value="Female" <?= ($gender == 'Female') ? 'selected' : '' ?>>Female</option>
             <option value="Other" <?= ($gender == 'Other') ? 'selected' : '' ?>>Other</option>
+        </select>
+
+        <label for="religion">Religion</label>
+        <select name="religion" required>
+            <option value="Muslim" <?= ($religion == 'Muslim') ? 'selected' : '' ?>>Muslim</option>
+            <option value="Hindu" <?= ($religion == 'Hindu') ? 'selected' : '' ?>>Hindu</option>
+            <option value="Christian" <?= ($religion == 'Christian') ? 'selected' : '' ?>>Christian</option>
+            <option value="Buddhist" <?= ($religion == 'Buddhist') ? 'selected' : '' ?>>Buddhist</option>
+        </select>
+
+        <label for="ethnicity">Ethnicity</label>
+        <select name="ethnicity" required>
+            <option value="Caucasian" <?= ($ethnicity == 'Caucasian') ? 'selected' : '' ?>>Caucasian</option>
+            <option value="African" <?= ($ethnicity == 'African') ? 'selected' : '' ?>>African</option>
+            <option value="Asian" <?= ($ethnicity == 'Asian') ? 'selected' : '' ?>>Asian</option>
+            <option value="Hispanic" <?= ($ethnicity == 'Hispanic') ? 'selected' : '' ?>>Hispanic</option>
+            <option value="Middle Eastern" <?= ($ethnicity == 'Middle Eastern') ? 'selected' : '' ?>>Middle Eastern</option>
+            <option value="Native American" <?= ($ethnicity == 'Native American') ? 'selected' : '' ?>>Native American</option>
+            <option value="Pacific Islander" <?= ($ethnicity == 'Pacific Islander') ? 'selected' : '' ?>>Pacific Islander</option>
+            <option value="Other" <?= ($ethnicity == 'Other') ? 'selected' : '' ?>>Other</option>
         </select>
 
         <label for="email">Email:</label>
@@ -247,6 +269,188 @@ $conn->close();
             <option value="Divorced" <?= ($marital_status == 'Divorced') ? 'selected' : '' ?>>Divorced</option>
         </select>
 
+        <label for="profession">Profession</label>
+        <select name="profession" required>
+            <optgroup label="Technology and IT">
+                <option value="software-engineer" <?= ($profession == 'software-engineer') ? 'selected' : '' ?>>Software Engineer</option>
+                <option value="data-scientist" <?= ($profession == 'data-scientist') ? 'selected' : '' ?>>Data Scientist</option>
+                <option value="it-support-specialist" <?= ($profession == 'it-support-specialist') ? 'selected' : '' ?>>IT Support Specialist</option>
+                <option value="web-developer" <?= ($profession == 'web-developer') ? 'selected' : '' ?>>Web Developer</option>
+                <option value="cybersecurity-analyst" <?= ($profession == 'cybersecurity-analyst') ? 'selected' : '' ?>>Cybersecurity Analyst</option>
+                <option value="cloud-engineer" <?= ($profession == 'cloud-engineer') ? 'selected' : '' ?>>Cloud Engineer</option>
+                <option value="network-administrator" <?= ($profession == 'network-administrator') ? 'selected' : '' ?>>Network Administrator</option>
+                <option value="mobile-app-developer" <?= ($profession == 'mobile-app-developer') ? 'selected' : '' ?>>Mobile App Developer</option>
+                <option value="ux-ui-designer" <?= ($profession == 'ux-ui-designer') ? 'selected' : '' ?>>UX/UI Designer</option>
+                <option value="blockchain-developer" <?= ($profession == 'blockchain-developer') ? 'selected' : '' ?>>Blockchain Developer</option>
+                <option value="ai-engineer" <?= ($profession == 'ai-engineer') ? 'selected' : '' ?>>Artificial Intelligence Engineer</option>
+                <option value="game-developer" <?= ($profession == 'game-developer') ? 'selected' : '' ?>>Game Developer</option>
+            </optgroup>
+            
+            <optgroup label="Healthcare and Medicine">
+                <option value="doctor" <?= ($profession == 'doctor') ? 'selected' : '' ?>>Doctor/Physician</option>
+                <option value="nurse" <?= ($profession == 'nurse') ? 'selected' : '' ?>>Nurse</option>
+                <option value="dentist" <?= ($profession == 'dentist') ? 'selected' : '' ?>>Dentist</option>
+                <option value="pharmacist" <?= ($profession == 'pharmacist') ? 'selected' : '' ?>>Pharmacist</option>
+                <option value="physical-therapist" <?= ($profession == 'physical-therapist') ? 'selected' : '' ?>>Physical Therapist</option>
+                <option value="psychologist" <?= ($profession == 'psychologist') ? 'selected' : '' ?>>Psychologist</option>
+                <option value="medical-research-scientist" <?= ($profession == 'medical-research-scientist') ? 'selected' : '' ?>>Medical Research Scientist</option>
+                <option value="occupational-therapist" <?= ($profession == 'occupational-therapist') ? 'selected' : '' ?>>Occupational Therapist</option>
+                <option value="radiologist" <?= ($profession == 'radiologist') ? 'selected' : '' ?>>Radiologist</option>
+                <option value="paramedic" <?= ($profession == 'paramedic') ? 'selected' : '' ?>>Paramedic</option>
+                <option value="optometrist" <?= ($profession == 'optometrist') ? 'selected' : '' ?>>Optometrist</option>
+                <option value="veterinarian" <?= ($profession == 'veterinarian') ? 'selected' : '' ?>>Veterinarian</option>
+            </optgroup>
+            
+            <optgroup label="Engineering and Architecture">
+                <option value="civil-engineer" <?= ($profession == 'civil-engineer') ? 'selected' : '' ?>>Civil Engineer</option>
+                <option value="mechanical-engineer" <?= ($profession == 'mechanical-engineer') ? 'selected' : '' ?>>Mechanical Engineer</option>
+                <option value="electrical-engineer" <?= ($profession == 'electrical-engineer') ? 'selected' : '' ?>>Electrical Engineer</option>
+                <option value="chemical-engineer" <?= ($profession == 'chemical-engineer') ? 'selected' : '' ?>>Chemical Engineer</option>
+                <option value="aerospace-engineer" <?= ($profession == 'aerospace-engineer') ? 'selected' : '' ?>>Aerospace Engineer</option>
+                <option value="environmental-engineer" <?= ($profession == 'environmental-engineer') ? 'selected' : '' ?>>Environmental Engineer</option>
+                <option value="biomedical-engineer" <?= ($profession == 'biomedical-engineer') ? 'selected' : '' ?>>Biomedical Engineer</option>
+                <option value="industrial-engineer" <?= ($profession == 'industrial-engineer') ? 'selected' : '' ?>>Industrial Engineer</option>
+                <option value="architect" <?= ($profession == 'architect') ? 'selected' : '' ?>>Architect</option>
+                <option value="urban-planner" <?= ($profession == 'urban-planner') ? 'selected' : '' ?>>Urban Planner</option>
+                <option value="structural-engineer" <?= ($profession == 'structural-engineer') ? 'selected' : '' ?>>Structural Engineer</option>
+            </optgroup>
+            
+            <optgroup label="Business and Finance">
+                <option value="accountant" <?= ($profession == 'accountant') ? 'selected' : '' ?>>Accountant</option>
+                <option value="financial-analyst" <?= ($profession == 'financial-analyst') ? 'selected' : '' ?>>Financial Analyst</option>
+                <option value="investment-banker" <?= ($profession == 'investment-banker') ? 'selected' : '' ?>>Investment Banker</option>
+                <option value="hr-manager" <?= ($profession == 'hr-manager') ? 'selected' : '' ?>>Human Resources Manager</option>
+                <option value="marketing-manager" <?= ($profession == 'marketing-manager') ? 'selected' : '' ?>>Marketing Manager</option>
+                <option value="sales-manager" <?= ($profession == 'sales-manager') ? 'selected' : '' ?>>Sales Manager</option>
+                <option value="business-consultant" <?= ($profession == 'business-consultant') ? 'selected' : '' ?>>Business Consultant</option>
+                <option value="project-manager" <?= ($profession == 'project-manager') ? 'selected' : '' ?>>Project Manager</option>
+                <option value="entrepreneur" <?= ($profession == 'entrepreneur') ? 'selected' : '' ?>>Entrepreneur</option>
+                <option value="economist" <?= ($profession == 'economist') ? 'selected' : '' ?>>Economist</option>
+                <option value="real-estate-agent" <?= ($profession == 'real-estate-agent') ? 'selected' : '' ?>>Real Estate Agent</option>
+                <option value="operations-manager" <?= ($profession == 'operations-manager') ? 'selected' : '' ?>>Operations Manager</option>
+            </optgroup>
+            
+            <optgroup label="Creative Arts and Design">
+                <option value="graphic-designer" <?= ($profession == 'graphic-designer') ? 'selected' : '' ?>>Graphic Designer</option>
+                <option value="interior-designer" <?= ($profession == 'interior-designer') ? 'selected' : '' ?>>Interior Designer</option>
+                <option value="fashion-designer" <?= ($profession == 'fashion-designer') ? 'selected' : '' ?>>Fashion Designer</option>
+                <option value="photographer" <?= ($profession == 'photographer') ? 'selected' : '' ?>>Photographer</option>
+                <option value="animator" <?= ($profession == 'animator') ? 'selected' : '' ?>>Animator</option>
+                <option value="art-director" <?= ($profession == 'art-director') ? 'selected' : '' ?>>Art Director</option>
+                <option value="copywriter" <?= ($profession == 'copywriter') ? 'selected' : '' ?>>Copywriter</option>
+                <option value="music-producer" <?= ($profession == 'music-producer') ? 'selected' : '' ?>>Music Producer</option>
+                <option value="video-editor" <?= ($profession == 'video-editor') ? 'selected' : '' ?>>Video Editor</option>
+                <option value="game-designer" <?= ($profession == 'game-designer') ? 'selected' : '' ?>>Game Designer</option>
+                <option value="illustrator" <?= ($profession == 'illustrator') ? 'selected' : '' ?>>Illustrator</option>
+            </optgroup>
+            
+            <optgroup label="Education and Training">
+                <option value="teacher" <?= ($profession == 'teacher') ? 'selected' : '' ?>>Teacher</option>
+                <option value="university-professor" <?= ($profession == 'university-professor') ? 'selected' : '' ?>>University Professor</option>
+                <option value="school-counselor" <?= ($profession == 'school-counselor') ? 'selected' : '' ?>>School Counselor</option>
+                <option value="corporate-trainer" <?= ($profession == 'corporate-trainer') ? 'selected' : '' ?>>Corporate Trainer</option>
+                <option value="educational-consultant" <?= ($profession == 'educational-consultant') ? 'selected' : '' ?>>Educational Consultant</option>
+                <option value="librarian" <?= ($profession == 'librarian') ? 'selected' : '' ?>>Librarian</option>
+                <option value="curriculum-developer" <?= ($profession == 'curriculum-developer') ? 'selected' : '' ?>>Curriculum Developer</option>
+                <option value="special-education-teacher" <?= ($profession == 'special-education-teacher') ? 'selected' : '' ?>>Special Education Teacher</option>
+                <option value="researcher" <?= ($profession == 'researcher') ? 'selected' : '' ?>>Researcher</option>
+            </optgroup>
+            
+            <optgroup label="Law and Public Services">
+                <option value="lawyer" <?= ($profession == 'lawyer') ? 'selected' : '' ?>>Lawyer</option>
+                <option value="paralegal" <?= ($profession == 'paralegal') ? 'selected' : '' ?>>Paralegal</option>
+                <option value="judge" <?= ($profession == 'judge') ? 'selected' : '' ?>>Judge</option>
+                <option value="police-officer" <?= ($profession == 'police-officer') ? 'selected' : '' ?>>Police Officer</option>
+                <option value="firefighter" <?= ($profession == 'firefighter') ? 'selected' : '' ?>>Firefighter</option>
+                <option value="social-worker" <?= ($profession == 'social-worker') ? 'selected' : '' ?>>Social Worker</option>
+                <option value="politician" <?= ($profession == 'politician') ? 'selected' : '' ?>>Politician</option>
+                <option value="diplomat" <?= ($profession == 'diplomat') ? 'selected' : '' ?>>Diplomat</option>
+                <option value="public-relations-specialist" <?= ($profession == 'public-relations-specialist') ? 'selected' : '' ?>>Public Relations Specialist</option>
+                <option value="probation-officer" <?= ($profession == 'probation-officer') ? 'selected' : '' ?>>Probation Officer</option>
+            </optgroup>
+            
+            <optgroup label="Science and Research">
+                <option value="biologist" <?= ($profession == 'biologist') ? 'selected' : '' ?>>Biologist</option>
+                <option value="chemist" <?= ($profession == 'chemist') ? 'selected' : '' ?>>Chemist</option>
+                <option value="physicist" <?= ($profession == 'physicist') ? 'selected' : '' ?>>Physicist</option>
+                <option value="environmental-scientist" <?= ($profession == 'environmental-scientist') ? 'selected' : '' ?>>Environmental Scientist</option>
+                <option value="geologist" <?= ($profession == 'geologist') ? 'selected' : '' ?>>Geologist</option>
+                <option value="astronomer" <?= ($profession == 'astronomer') ? 'selected' : '' ?>>Astronomer</option>
+                <option value="forensic-scientist" <?= ($profession == 'forensic-scientist') ? 'selected' : '' ?>>Forensic Scientist</option>
+                <option value="marine-biologist" <?= ($profession == 'marine-biologist') ? 'selected' : '' ?>>Marine Biologist</option>
+                <option value="meteorologist" <?= ($profession == 'meteorologist') ? 'selected' : '' ?>>Meteorologist</option>
+                <option value="geneticist" <?= ($profession == 'geneticist') ? 'selected' : '' ?>>Geneticist</option>
+            </optgroup>
+            
+            <optgroup label="Media and Communication">
+                <option value="journalist" <?= ($profession == 'journalist') ? 'selected' : '' ?>>Journalist</option>
+                <option value="news-anchor" <?= ($profession == 'news-anchor') ? 'selected' : '' ?>>News Anchor</option>
+                <option value="public-relations-specialist" <?= ($profession == 'public-relations-specialist') ? 'selected' : '' ?>>Public Relations Specialist</option>
+                <option value="content-writer" <?= ($profession == 'content-writer') ? 'selected' : '' ?>>Content Writer</option>
+                <option value="editor" <?= ($profession == 'editor') ? 'selected' : '' ?>>Editor</option>
+                <option value="blogger" <?= ($profession == 'blogger') ? 'selected' : '' ?>>Blogger</option>
+                <option value="radio-host" <?= ($profession == 'radio-host') ? 'selected' : '' ?>>Radio Host</option>
+                <option value="film-director" <?= ($profession == 'film-director') ? 'selected' : '' ?>>Film Director</option>
+                <option value="social-media-manager" <?= ($profession == 'social-media-manager') ? 'selected' : '' ?>>Social Media Manager</option>
+                <option value="podcast-producer" <?= ($profession == 'podcast-producer') ? 'selected' : '' ?>>Podcast Producer</option>
+            </optgroup>
+            
+            <optgroup label="Trades and Skilled Labor">
+                <option value="electrician" <?= ($profession == 'electrician') ? 'selected' : '' ?>>Electrician</option>
+                <option value="plumber" <?= ($profession == 'plumber') ? 'selected' : '' ?>>Plumber</option>
+                <option value="carpenter" <?= ($profession == 'carpenter') ? 'selected' : '' ?>>Carpenter</option>
+                <option value="mechanic" <?= ($profession == 'mechanic') ? 'selected' : '' ?>>Mechanic</option>
+                <option value="welder" <?= ($profession == 'welder') ? 'selected' : '' ?>>Welder</option>
+                <option value="hvac-technician" <?= ($profession == 'hvac-technician') ? 'selected' : '' ?>>HVAC Technician</option>
+                <option value="truck-driver" <?= ($profession == 'truck-driver') ? 'selected' : '' ?>>Truck Driver</option>
+                <option value="construction-worker" <?= ($profession == 'construction-worker') ? 'selected' : '' ?>>Construction Worker</option>
+                <option value="landscaper" <?= ($profession == 'landscaper') ? 'selected' : '' ?>>Landscaper</option>
+                <option value="painter" <?= ($profession == 'painter') ? 'selected' : '' ?>>Painter</option>
+            </optgroup>
+            
+            <optgroup label="Hospitality and Tourism">
+                <option value="hotel-manager" <?= ($profession == 'hotel-manager') ? 'selected' : '' ?>>Hotel Manager</option>
+                <option value="travel-agent" <?= ($profession == 'travel-agent') ? 'selected' : '' ?>>Travel Agent</option>
+                <option value="chef" <?= ($profession == 'chef') ? 'selected' : '' ?>>Chef</option>
+                <option value="event-planner" <?= ($profession == 'event-planner') ? 'selected' : '' ?>>Event Planner</option>
+                <option value="flight-attendant" <?= ($profession == 'flight-attendant') ? 'selected' : '' ?>>Flight Attendant</option>
+                <option value="tour-guide" <?= ($profession == 'tour-guide') ? 'selected' : '' ?>>Tour Guide</option>
+                <option value="restaurant-manager" <?= ($profession == 'restaurant-manager') ? 'selected' : '' ?>>Restaurant Manager</option>
+                <option value="cruise-director" <?= ($profession == 'cruise-director') ? 'selected' : '' ?>>Cruise Director</option>
+            </optgroup>
+            
+            <optgroup label="Sports and Fitness">
+                <option value="professional-athlete" <?= ($profession == 'professional-athlete') ? 'selected' : '' ?>>Professional Athlete</option>
+                <option value="fitness-trainer" <?= ($profession == 'fitness-trainer') ? 'selected' : '' ?>>Fitness Trainer</option>
+                <option value="sports-coach" <?= ($profession == 'sports-coach') ? 'selected' : '' ?>>Sports Coach</option>
+                <option value="sports-analyst" <?= ($profession == 'sports-analyst') ? 'selected' : '' ?>>Sports Analyst</option>
+                <option value="physical-education-teacher" <?= ($profession == 'physical-education-teacher') ? 'selected' : '' ?>>Physical Education Teacher</option>
+                <option value="sports-psychologist" <?= ($profession == 'sports-psychologist') ? 'selected' : '' ?>>Sports Psychologist</option>
+                <option value="sports-manager" <?= ($profession == 'sports-manager') ? 'selected' : '' ?>>Sports Manager</option>
+            </optgroup>
+            
+            <optgroup label="Environment and Sustainability">
+                <option value="environmental-consultant" <?= ($profession == 'environmental-consultant') ? 'selected' : '' ?>>Environmental Consultant</option>
+                <option value="conservation-scientist" <?= ($profession == 'conservation-scientist') ? 'selected' : '' ?>>Conservation Scientist</option>
+                <option value="ecologist" <?= ($profession == 'ecologist') ? 'selected' : '' ?>>Ecologist</option>
+                <option value="agricultural-scientist" <?= ($profession == 'agricultural-scientist') ? 'selected' : '' ?>>Agricultural Scientist</option>
+                <option value="renewable-energy-specialist" <?= ($profession == 'renewable-energy-specialist') ? 'selected' : '' ?>>Renewable Energy Specialist</option>
+                <option value="sustainability-coordinator" <?= ($profession == 'sustainability-coordinator') ? 'selected' : '' ?>>Sustainability Coordinator</option>
+                <option value="wildlife-biologist" <?= ($profession == 'wildlife-biologist') ? 'selected' : '' ?>>Wildlife Biologist</option>
+            </optgroup>
+            
+            <optgroup label="Freelance and Remote Work">
+                <option value="virtual-assistant" <?= ($profession == 'virtual-assistant') ? 'selected' : '' ?>>Virtual Assistant</option>
+                <option value="freelance-writer" <?= ($profession == 'freelance-writer') ? 'selected' : '' ?>>Freelance Writer</option>
+                <option value="freelance-graphic-designer" <?= ($profession == 'freelance-graphic-designer') ? 'selected' : '' ?>>Freelance Graphic Designer</option>
+                <option value="online-tutor" <?= ($profession == 'online-tutor') ? 'selected' : '' ?>>Online Tutor</option>
+                <option value="digital-marketing-consultant" <?= ($profession == 'digital-marketing-consultant') ? 'selected' : '' ?>>Digital Marketing Consultant</option>
+                <option value="e-commerce-specialist" <?= ($profession == 'e-commerce-specialist') ? 'selected' : '' ?>>E-commerce Specialist</option>
+                <option value="freelance-software-developer" <?= ($profession == 'freelance-software-developer') ? 'selected' : '' ?>>Freelance Software Developer</option>
+            </optgroup>
+        </select>
+
+
         <label for="complexion">Complexion:</label>
         <input type="text" name="complexion" value="<?= htmlspecialchars($complexion) ?>">
 
@@ -272,6 +476,7 @@ $conn->close();
         <!-- Submit Button -->
         <button type="submit" class="submit-btn">Save Changes</button>
     </form>
+    <button type="submit" class="submit-btn" onclick="window.location.href='index.php';">Back to dashboard</button>
 </div>
 
 </body>
