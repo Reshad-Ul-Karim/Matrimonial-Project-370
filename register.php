@@ -315,7 +315,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <option value="curriculum-developer">Curriculum Developer</option>
         <option value="special-education-teacher">Special Education Teacher</option>
         <option value="researcher">Researcher</option>
-    </optgroup>
+    </optgroup> 
     <optgroup label="Law and Public Services">
         <option value="lawyer">Lawyer</option>
         <option value="paralegal">Paralegal</option>
@@ -413,7 +413,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </select>
 
         <label for="ethnicity">Ethnicity</label>
-        <input type="text" name="ethnicity" id="ethnicity" required>
+            <select name="ethnicity" id="ethnicity" required>
+                <option value="Caucasian" <?= ($ethnicity == 'Caucasian') ? 'selected' : '' ?>>Caucasian</option>
+                <option value="African" <?= ($ethnicity == 'African') ? 'selected' : '' ?>>African</option>
+                <option value="Asian" <?= ($ethnicity == 'Asian') ? 'selected' : '' ?>>Asian</option>
+                <option value="Hispanic" <?= ($ethnicity == 'Hispanic') ? 'selected' : '' ?>>Hispanic</option>
+                <option value="Middle Eastern" <?= ($ethnicity == 'Middle Eastern') ? 'selected' : '' ?>>Middle Eastern</option>
+                <option value="Native American" <?= ($ethnicity == 'Native American') ? 'selected' : '' ?>>Native American</option>
+                <option value="Pacific Islander" <?= ($ethnicity == 'Pacific Islander') ? 'selected' : '' ?>>Pacific Islander</option>
+                <option value="Other" <?= ($ethnicity == 'Other') ? 'selected' : '' ?>>Other</option>
+            </select>
+
 
         <label for="email">Email</label>
         <input type="email" name="email" id="email" required>
