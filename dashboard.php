@@ -8,19 +8,28 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+function calculateAge($dob) {
+    $dob = new DateTime($dob); // Convert date of birth to DateTime object
+    $currentDate = new DateTime(); // Get the current date
+    $age = $currentDate->diff($dob); // Calculate the difference between current date and date of birth
+    return $age->y; // Return the age in years
+}
+
 $user_id = $_SESSION['user_id']; // Assuming user_id is stored in the session during login
 
 // Updated SQL Query: Retrieve location from the Address table using the address_id
-$sql = "SELECT u.First_Name, u.Last_Name
+$sql = "SELECT u.First_Name, u.Last_Name, u.Middle_Name, u.Email, u.DOB
         FROM User u
-        LEFT JOIN Address a ON u.address_id = a.address_id
         WHERE u.user_id = '$user_id'";
 
 $result = mysqli_query($conn, $sql);
 if (mysqli_num_rows($result) > 0) {
     // Fetch user data
     $user = mysqli_fetch_assoc($result);
-    $user_name = $user['First_Name'] . ' ' . $user['Last_Name'];
+    $user_name = $user['First_Name'] .' '. $user['Middle_Name'] .' '. $user['Last_Name'];
+    $email = $user['Email'];
+    $DOB = $user['DOB'];
+    $age = calculateAge($DOB);
 } else {
     // If user is not found, log them out and redirect to login page
     header("Location: logout.php");
@@ -172,7 +181,7 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
             <h2>Menu</h2>
             <a href="view_matches.php">View Matches</a>
             <a href="edit_preferences.php">Edit Preferences</a>
-            <a href="profile.php">My Profile</a>
+            <a href="my_profile_details.php">My Profile</a>
             <a href="account_settings.php">Account Settings</a>
         </div>
 
@@ -184,9 +193,8 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
                 <img src="<?php echo htmlspecialchars($profile_photo); ?>" alt="User Profile Picture">
                 <div>
                     <h2>Welcome, <?php echo htmlspecialchars($user_name); ?></h2>
-                    <p><strong>Email:</strong> <?php echo htmlspecialchars($user_email); ?></p>
-                    <p><strong>Location:</strong> <?php echo htmlspecialchars($user_location); ?></p>
-                    <p><strong>Age:</strong> <?php echo htmlspecialchars($user_age); ?></p>
+                    <p><strong>Email:</strong> <?php echo htmlspecialchars($email); ?></p>
+                    <p><strong>Age:</strong> <?php echo htmlspecialchars($age); ?></p>
                 </div>
             </div>
 
