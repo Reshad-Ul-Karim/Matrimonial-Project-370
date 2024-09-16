@@ -181,8 +181,8 @@
             <img src="icon.png" alt="Logo">
             <h1>Matrimonial Hub</h1>
             <div class="header-right">
-                <a href="signup.html">Sign Up</a>
-                <a href="login.html">Sign In</a>
+                <a href="register.php">Sign Up</a>
+                <a href="index.php">Sign In</a>
             </div>
         </header>
 

@@ -180,7 +180,7 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
         <div class="sidebar">
             <h2>Menu</h2>
             <a href="view_matches.php">View Matches</a>
-            <a href="edit_preferences.php">Edit Preferences</a>
+            <a href="submit_preferences.php">Search Matches</a>
             <a href="my_profile_details.php">My Profile</a>
             <a href="account_settings.php">Account Settings</a>
         </div>
@@ -219,7 +219,7 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
 
             <!-- Action Buttons -->
             <div class="actions">
-                <button onclick="window.location.href='view_matches.php';">View Matches</button>
+                <button onclick="window.location.href='search_result.php';">View Matches</button>
                 <button onclick="window.location.href='edit_preferences.php';">Edit Preferences</button>
             </div>
 

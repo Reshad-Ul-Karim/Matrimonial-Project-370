@@ -1,282 +1,142 @@
 <?php
-// Include the database connection
-include 'DBconnect.php';
-session_start(); // Start session to access saved preferences
+session_start();
 
-// Check if preferences are set in the session
-if (!isset($_SESSION['preferences'])) {
-    // If preferences are not set, redirect to the preferences page or display an error message
-    header('Location: submit_preferences.php');
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
     exit();
 }
 
-// Retrieve preferences from session
-$preferences = $_SESSION['preferences'];
+// Include database connection file
+include('DBconnect.php');
 
-// Extract preferences from the session
-$gender = $preferences['gender'];
-$age = $preferences['age'];
-$religion = $preferences['religion'];
-$education = $preferences['education'];
-$language = $preferences['language'];
-$nationality = $preferences['nationality'];
-$occupation = $preferences['occupation'];
+// Get the query parameters from the URL (passed from the search form)
+$profession = isset($_GET['profession']) ? htmlspecialchars($_GET['profession']) : '';
+$gender = isset($_GET['gender']) ? htmlspecialchars($_GET['gender']) : '';
+$religion = isset($_GET['religion']) ? htmlspecialchars($_GET['religion']) : '';
+$ethnicity = isset($_GET['ethnicity']) ? htmlspecialchars($_GET['ethnicity']) : '';
+$marital_status = isset($_GET['marital_status']) ? htmlspecialchars($_GET['marital_status']) : '';
+$secondary_education = isset($_GET['secondary_education']) ? htmlspecialchars($_GET['secondary_education']) : '';
+$higher_secondary = isset($_GET['higher_secondary']) ? htmlspecialchars($_GET['higher_secondary']) : '';
+$undergrade = isset($_GET['undergrade']) ? htmlspecialchars($_GET['undergrade']) : '';
+$post_grade = isset($_GET['post_grade']) ? htmlspecialchars($_GET['post_grade']) : '';
+$complexion = isset($_GET['complexion']) ? htmlspecialchars($_GET['complexion']) : '';
+$height = isset($_GET['height']) ? floatval($_GET['height']) : 0;
+$min_age = isset($_GET['min_age']) ? intval($_GET['min_age']) : 0;
+$max_age = isset($_GET['max_age']) ? intval($_GET['max_age']) : 100;
 
-// Query the database to get matching profiles based on preferences
-$sql = "
-    SELECT u.First_Name, u.Age, u.City, u.Religion, u.Profession, pd.Language, u.Profile_Photo_URL,
-    (
-        (CASE WHEN u.Gender = '$gender' THEN 1 ELSE 0 END) +
-        (CASE WHEN pd.Religion = '$religion' THEN 1 ELSE 0 END) +
-        (CASE WHEN pd.Education = '$education' THEN 1 ELSE 0 END) +
-        (CASE WHEN pd.Language = '$language' THEN 1 ELSE 0 END) +
-        (CASE WHEN pd.Occupation = '$occupation' THEN 1 ELSE 0 END)
-    ) AS match_score
-    FROM User u
-    JOIN Profile_Details pd ON u.user_id = pd.user_id
-    WHERE u.user_id != '".$_SESSION['user_id']."' -- Exclude the current user
-    ORDER BY match_score DESC, u.First_Name ASC";  // Sort by match score first, then alphabetically by name
+$matches = [];
 
-// Execute the query
-$result = mysqli_query($conn, $sql);
+// SQL to join User and Profile_Details and compare preferences
+$sql = "SELECT 
+    U.user_id, U.First_Name, U.Middle_Name, U.Last_Name, U.Profession, U.Gender, U.Religion, U.Ethnicity, U.DOB, 
+    PD.Marital_Status, PD.Secondary_Education, PD.Higher_Secondary, PD.Undergrade, PD.Post_Grade, PD.Complexion, PD.Height
+FROM 
+    User AS U
+JOIN 
+    Profile_Details AS PD ON U.user_id = PD.user_id
+WHERE 
+    U.user_id != ? AND U.Account_Status = 'Active'";
 
-// Fetch all matching profiles
-$profiles = [];
-if ($result && mysqli_num_rows($result) > 0) {
-    while ($row = mysqli_fetch_assoc($result)) {
-        $profiles[] = $row;
+// Prepare and execute the query
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $_SESSION['user_id']);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Compare and store matches
+while ($user = $result->fetch_assoc()) {
+    $match_count = 0;
+
+    // Calculate age
+    $dob = new DateTime($user['DOB']);
+    $today = new DateTime();
+    $age = $today->diff($dob)->y; // Calculate age in years
+
+    // Full name concatenation (if Middle_Name is available)
+    $full_name = trim($user['First_Name'] . ' ' . ($user['Middle_Name'] ?? '') . ' ' . $user['Last_Name']);
+
+    // Matching logic for each preference
+    if ($user['Profession'] === $profession) $match_count++;
+    if ($user['Gender'] === $gender) $match_count++;
+    if ($user['Religion'] === $religion) $match_count++;
+    if ($user['Ethnicity'] === $ethnicity) $match_count++;
+    if ($user['Marital_Status'] === $marital_status) $match_count++;
+    if ($user['Secondary_Education'] === $secondary_education) $match_count++;
+    if ($user['Higher_Secondary'] === $higher_secondary) $match_count++;
+    if ($user['Undergrade'] === $undergrade) $match_count++;
+    if ($user['Post_Grade'] === $post_grade) $match_count++;
+    if ($user['Complexion'] === $complexion) $match_count++;
+
+    // Check height and age match
+    if ($user['Height'] > $height && $age >= $min_age && $age <= $max_age) {
+        $match_count++; // Increment if height and age match
     }
-} else {
-    // No matches found
-    $profiles = [];
+
+    // Store the match if match_count is greater than 0
+    if ($match_count > 0) {
+        $matches[] = ['user_id' => $user['user_id'], 'name' => $full_name, 'match_count' => $match_count];
+    }
 }
 
-// Encode the profiles to JSON to pass them to the frontend
-$profiles_json = json_encode($profiles);
+// Sort matches by match_count in descending order
+usort($matches, function($a, $b) {
+    return $b['match_count'] - $a['match_count'];
+});
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matching Profiles</title>
+    <title>Search Results</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Product+Sans&display=swap');
-
         body {
-            font-family: 'Product Sans', Arial, sans-serif;
-            background-color: #f0f8ff;
-            margin: 0;
-            padding: 5px;
-        }
-
-        header {
-            background: linear-gradient(90deg, #f7886cd6 0%, rgba(255, 42, 0, 0.784) 100%);
-            padding: 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: white;
-        }
-
-        header img {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-        }
-
-        .header-right {
-            display: flex;
-            gap: 20px;
-        }
-
-        .header-right a {
-            background-color: #f76c6c;
-            color: white;
-            padding: 12px 20px;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 5px;
-        }
-
-        .header-right a:hover {
-            background-color: #ff9999;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
         }
 
         h2 {
-            text-align: center;
-            color: #f76c6c;
-            margin-top: 20px;
-        }
-
-        /* Profile Container */
-        .profile-container {
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 20px;
-            background-color: #ffe4e1;
-            border-radius: 10px;
-            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
-            border: 2px solid #f76c6c;
-        }
-
-        .profile {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.5s ease;
-        }
-
-        .profile img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 20px;
-        }
-
-        .profile-info {
-            flex: 1;
-        }
-
-        .profile-info h3 {
-            margin: 0;
-            color: #f76c6c;
-        }
-
-        .profile-info p {
-            margin: 5px 0;
-            font-size: 16px;
             color: #333;
         }
 
-        .match-percentage {
-            font-size: 18px;
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .match-count {
             font-weight: bold;
-            color: #f76c6c;
-        }
-
-        .profile-actions {
-            text-align: right;
-        }
-
-        .profile-actions button {
-            background-color: #f76c6c;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .profile-actions button:hover {
-            background-color: #ff9999;
-        }
-
-        /* Scrollbar Styling */
-        .profile-container::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        .profile-container::-webkit-scrollbar-thumb {
-            background-color: #f76c6c;
-            border-radius: 5px;
-        }
-
-        .profile-container::-webkit-scrollbar-track {
-            background-color: #f0f8ff;
+            color: #4CAF50;
         }
     </style>
 </head>
-
 <body>
 
-    <!-- Header with Logo and Navigation -->
-    <header>
-        <img src="icon.png" alt="Logo">
-        <h1>Matrimonial Hub</h1>
-        <div class="header-right">
-            <a href="home.php">Home</a>
-            <a href="submit_preferences.php">Set Preferences</a>
-        </div>
-    </header>
+<h2>Search Results</h2>
 
-    <h2>Your Best Matches</h2>
-
-    <!-- Container for Profile Results -->
-    <div class="profile-container" id="profile-container">
-        <!-- Profiles will be dynamically loaded here from the database -->
-    </div>
-
-    <script>
-        // Retrieve profiles from PHP
-        const profiles = <?php echo $profiles_json; ?>;
-
-        function fetchProfiles() {
-            const profileContainer = document.getElementById('profile-container');
-
-            if (profiles.length === 0) {
-                profileContainer.innerHTML = "<p>No matches found based on your preferences.</p>";
-                return;
-            }
-
-            profiles.forEach(profile => {
-                let profileDiv = document.createElement('div');
-                profileDiv.classList.add('profile', 'reveal');
-
-                profileDiv.innerHTML = `
-                    <img src="${profile.Profile_Photo_URL || 'default_profile.jpg'}" alt="${profile.First_Name}">
-                    <div class="profile-info">
-                        <h3>${profile.First_Name}</h3>
-                        <p><strong>Age:</strong> ${profile.Age}</p>
-                        <p><strong>Location:</strong> ${profile.City}</p>
-                        <p><strong>Religion:</strong> ${profile.Religion}</p>
-                        <p><strong>Occupation:</strong> ${profile.Profession}</p>
-                        <p class="match-percentage">${profile.match_score * 10}% Match</p>
-                    </div>
-                    <div class="profile-actions">
-                        <button>View Profile</button>
-                    </div>
-                `;
-
-                profileContainer.appendChild(profileDiv);
-            });
-
-            // Call the revealOnScroll function after loading the profiles dynamically
-            revealOnScroll();
-        }
-
-        // Reveal on Scroll Animation
-        function revealOnScroll() {
-            const reveals = document.querySelectorAll('.reveal');
-            reveals.forEach(function (reveal) {
-                const windowHeight = window.innerHeight;
-                const revealTop = reveal.getBoundingClientRect().top;
-                const revealPoint = 150;
-
-                if (revealTop < windowHeight - revealPoint) {
-                    reveal.style.opacity = '1';
-                    reveal.style.transform = 'translateY(0)';
-                }
-            });
-        }
-
-        window.addEventListener('scroll', revealOnScroll);
-
-        // Trigger fetching profiles when the page loads
-        window.onload = fetchProfiles;
-    </script>
+<?php if (!empty($matches)): ?>
+    <ul>
+        <?php foreach ($matches as $match): ?>
+            <li>
+                Name: <?= htmlspecialchars($match['name']) ?> <br>
+                Matches: <span class="match-count"><?= $match['match_count'] ?></span>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php else: ?>
+    <p>No matches found.</p>
+<?php endif; ?>
 
 </body>
-
 </html>

@@ -452,10 +452,16 @@ $conn->close();
 
 
         <label for="complexion">Complexion:</label>
-        <input type="text" name="complexion" value="<?= htmlspecialchars($complexion) ?>">
-
+        <select name="complexion" required>
+            <option value="Fair" <?= ($complexion == 'Fair') ? 'selected' : '' ?>>Fair</option>
+            <option value="Medium" <?= ($complexion == 'Medium') ? 'selected' : '' ?>>Medium</option>
+            <option value="Olive" <?= ($complexion == 'Olive') ? 'selected' : '' ?>>Olive</option>
+            <option value="Tan" <?= ($complexion == 'Tan') ? 'selected' : '' ?>>Tan</option>
+            <option value="Dark" <?= ($complexion == 'Dark') ? 'selected' : '' ?>>Dark</option>
+        </select>
         <label for="height">Height (cm):</label>
-        <input type="number" name="height" value="<?= htmlspecialchars($height) ?>" required>
+        <input type="number" name="height" value="<?= htmlspecialchars($height) ?>" step="0.01" required>
+
 
         <label for="weight">Weight (kg):</label>
         <input type="number" name="weight" value="<?= htmlspecialchars($weight) ?>" required>

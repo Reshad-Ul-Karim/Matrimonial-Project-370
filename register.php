@@ -414,14 +414,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <label for="ethnicity">Ethnicity</label>
             <select name="ethnicity" id="ethnicity" required>
-                <option value="Caucasian" <?= ($ethnicity == 'Caucasian') ? 'selected' : '' ?>>Caucasian</option>
-                <option value="African" <?= ($ethnicity == 'African') ? 'selected' : '' ?>>African</option>
-                <option value="Asian" <?= ($ethnicity == 'Asian') ? 'selected' : '' ?>>Asian</option>
-                <option value="Hispanic" <?= ($ethnicity == 'Hispanic') ? 'selected' : '' ?>>Hispanic</option>
-                <option value="Middle Eastern" <?= ($ethnicity == 'Middle Eastern') ? 'selected' : '' ?>>Middle Eastern</option>
-                <option value="Native American" <?= ($ethnicity == 'Native American') ? 'selected' : '' ?>>Native American</option>
-                <option value="Pacific Islander" <?= ($ethnicity == 'Pacific Islander') ? 'selected' : '' ?>>Pacific Islander</option>
-                <option value="Other" <?= ($ethnicity == 'Other') ? 'selected' : '' ?>>Other</option>
+                <option value="Caucasian">Caucasian</option>
+                <option value="African">African</option>
+                <option value="Asian">Asian</option>
+                <option value="Hispanic">Hispanic</option>
+                <option value="Middle Eastern">Middle Eastern</option>
+                <option value="Native American">Native American</option>
+                <option value="Pacific Islander">Pacific Islander</option>
+                <option value="Other">Other</option>
             </select>
 
 
