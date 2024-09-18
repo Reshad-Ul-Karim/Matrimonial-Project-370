@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matching Profiles</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Product+Sans&display=swap');
+
+        body {
+            font-family: 'Product Sans', Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 5px;
+        }
+
+        header {
+            background: linear-gradient(90deg, #f7886cd6 0%, rgba(255, 42, 0, 0.784) 100%);
+            padding: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        header img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+        }
+
+        .header-right a {
+            background-color: #f76c6c;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .header-right a:hover {
+            background-color: #ff9999;
+        }
+
+        h2 {
+            text-align: center;
+            color: #f76c6c;
+            margin-top: 20px;
+        }
+
+        /* Profile Container */
+        .profile-container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #ffe4e1;
+            border-radius: 10px;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            overflow-y: auto; 
+            border: 2px solid #f76c6c;
+            
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.5s ease;
+        }
+
+        .profile img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info h3 {
+            margin: 0;
+            color: #f76c6c;
+        }
+
+        .profile-info p {
+            margin: 5px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .match-percentage {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f76c6c;
+        }
+
+        .profile-actions {
+            text-align: right;
+        }
+
+        .profile-actions button {
+            background-color: #f76c6c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .profile-actions button:hover {
+            background-color: #ff9999;
+        }
+
+        /* Scrollbar Styling */
+        .profile-container::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .profile-container::-webkit-scrollbar-thumb {
+            background-color: #f76c6c;
+            border-radius: 5px;
+        }
+
+        .profile-container::-webkit-scrollbar-track {
+            background-color: #f0f8ff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header with Logo and Navigation -->
+    <header>
+        <img src="icon.png" alt="Logo">
+        <h1>Matrimonial Hub</h1>
+        <div class="header-right">
+            <a href="home.html">Home</a>
+            <a href="preferences.html">Set Preferences</a>
+        </div>
+    </header>
+
+    <h2>Your Best Matches</h2>
+
+    <!-- Container for Profile Results -->
+    <div class="profile-container" id="profile-container">
+        <!-- Profiles will be dynamically loaded here from the database -->
+    </div>
+
+    <script>
+        // Example AJAX call to fetch profiles from the server/database based on preferences.
+        // Replace this with your actual database query logic.
+
+        function fetchProfiles() {
+            // Example JSON data response from server after matching the user preferences
+            // Replace this with an actual call to your backend API or database
+            let profiles = [
+                {
+                    "name": "John Doe",
+                    "age": 29,
+                    "location": "New York",
+                    "religion": "Christian",
+                    "occupation": "Engineer",
+                    "language": "English",
+                    "matchPercentage": 95,
+                    "imgSrc": "profile1.jpg"
+                },
+                {
+                    "name": "Priya Sharma",
+                    "age": 26,
+                    "location": "Mumbai",
+                    "religion": "Hindu",
+                    "occupation": "Doctor",
+                    "language": "Hindi",
+                    "matchPercentage": 90,
+                    "imgSrc": "profile2.jpg"
+                },
+                {
+                    "name": "Ahmed Khan",
+                    "age": 31,
+                    "location": "Dubai",
+                    "religion": "Muslim",
+                    "occupation": "Business",
+                    "language": "Arabic",
+                    "matchPercentage": 88,
+                    "imgSrc": "profile3.jpg"
+                }
+            ];
+
+            const profileContainer = document.getElementById('profile-container');
+
+            profiles.forEach(profile => {
+                let profileDiv = document.createElement('div');
+                profileDiv.classList.add('profile', 'reveal');
+                
+                profileDiv.innerHTML = `
+                    <img src="${profile.imgSrc}" alt="${profile.name}">
+                    <div class="profile-info">
+                        <h3>${profile.name}</h3>
+                        <p><strong>Age:</strong> ${profile.age}</p>
+                        <p><strong>Location:</strong> ${profile.location}</p>
+                        <p><strong>Religion:</strong> ${profile.religion}</p>
+                        <p><strong>Occupation:</strong> ${profile.occupation}</p>
+                        <p><strong>Language:</strong> ${profile.language}</p>
+                        <p class="match-percentage">${profile.matchPercentage}% Match</p>
+                    </div>
+                    <div class="profile-actions">
+                        <button>View Profile</button>
+                    </div>
+                `;
+                
+                profileContainer.appendChild(profileDiv);
+            });
+
+            // Call the revealOnScroll function after loading the profiles dynamically
+            revealOnScroll();
+        }
+
+        // Reveal on Scroll Animation
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(function (reveal) {
+                const windowHeight = window.innerHeight;
+                const revealTop = reveal.getBoundingClientRect().top;
+                const revealPoint = 150;
+
+                if (revealTop < windowHeight - revealPoint) {
+                    reveal.style.opacity = '1';
+                    reveal.style.transform = 'translateY(0)';
+                }
+            });
+        }
+
+        window.addEventListener('scroll', revealOnScroll);
+
+        // Trigger fetching profiles when the page loads
+        window.onload = fetchProfiles;
+    </script>
+
+</body>
+
+</html>
