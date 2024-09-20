@@ -483,7 +483,7 @@ $conn->close();
         <button type="submit" class="submit-btn">Save Changes</button>
     </form>
     <button type="submit" class="submit-btn" onclick="window.location.href='index.php';">Back to dashboard</button>
-</div>
 
+</div>
 </body>
 </html>

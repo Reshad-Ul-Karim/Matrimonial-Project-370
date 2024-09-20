@@ -17,6 +17,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $password = mysqli_real_escape_string($conn, $_POST['password']);
 
   if (!empty($email) && !empty($password)) {
+    // Check for admin credentials
+    if ($email === "admin@gmail.com" && $password === "biyaconfirm") {
+        header("Location: admin_dashboard.php"); // Redirect to admin dashboard
+        exit;
+    }
       $sql = "SELECT user_id, Password FROM User WHERE Email = '$email'";
       $result = mysqli_query($conn, $sql);
       if ($result && mysqli_num_rows($result) > 0) {

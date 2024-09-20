@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Matrimonial Hub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: rgba(255, 0, 0, 0.644);
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+        .hero-section {
+            background: linear-gradient(90deg, #f7886cd6 0%, rgba(255, 42, 0, 0.784) 100%);
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+        .hero-section h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        /* About Us Section */
+        .about-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 18px;
+            background-color: #ffe4e1;
+            border-radius: 10px;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #f76c6c;
+            position: relative;
+            text-align: center;
+        }
+        .about-container:before, .about-container:after {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 5px;
+            background-color: #f76c6c;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 10px;
+        }
+        .about-container:after {
+            top: auto;
+            bottom: -15px;
+        }
+        .about-content {
+            text-align: center;
+            line-height: 1.8;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .about-image {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .about-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .our-team {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+        }
+        .team-member {
+            text-align: center;
+            width: 30%;
+        }
+        .team-member img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .team-member h3 {
+            margin-top: 15px;
+            font-size: 20px;
+            color: #333;
+        }
+        .team-member p {
+            color: #666;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f76c6c;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        .footer-links {
+            margin-top: 20px;
+        }
+        .footer-links a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>About Us</h1>
+</header>
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <div>
+        <h1>Matrimonial Hub</h1>
+        <p>Connecting hearts with trust and tradition.</p>
+    </div>
+</div>
+
+<!-- About Us Section -->
+<div class="about-container">
+    <h2>Our Story</h2>
+    <div class="about-content">
+        <p>Matrimonial Hub was founded with a mission to create meaningful and lasting relationships in the year 2024. With a view to connecting people, we are proud to have facilitated countless success stories and marriages carrying forward through this platform. We believe that love transcends all boundaries and that every individual deserves to find their perfect match.</p>
+        <p>Our platform combines modern technology with traditional values to help you find the right partner who matches your preferences and background. We are dedicated to providing a safe, secure, and user-friendly space where you can meet and interact with people who are serious about marriage.</p>
+    </div>
+
+    <div class="about-image">
+        <img src="our_story_image.jpg" alt="About Matrimonial Hub">
+    </div>
+</div>
+
+<!-- Our Team Section -->
+<div class="container our-team">
+    <div class="team-member">
+        <img src="team_member1.jpg" alt="Founder">
+        <h3>Reshad Ul Karim</h3>
+        <p>Founder & CEO</p>
+    </div>
+    <div class="team-member">
+        <img src="team_member2.jpg" alt="Co-Founder">
+        <h3>Sammam Mahdi</h3>
+        <p>Chief Technical Officer</p>
+    </div>
+    <div class="team-member">
+        <img src="team_member3.jpg" alt="Marriage Counselor">
+        <h3>Abrar Samin</h3>
+        <p>Chief Financial Officer</p>
+    </div>
+    <div class="team-member">
+        <img src="team_member4.jpg" alt="Marriage Counselor">
+        <h3>Syeda Maliha Tabassum</h3>
+        <p>Chief Marketing Officer</p>
+    </div>
+    <div class="team-member">
+        <img src="team_member5.jpg" alt="Marriage Counselor">
+        <h3>Nashita Anjum</h3>
+        <p>Head Marriage Counselor</p>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2024 Matrimonial Hub. All Rights Reserved.</p>
+    <div class="footer-links">
+        <a href="privacy.php">Privacy Policy</a> |
+        <a href="terms.php">Terms & Conditions</a> |
+        <a href="contact.php">Contact Us</a>|
+        <a href="home.php">Home</a>|
+        <a href="index.php">Login</a>|
+        <a href="register.php">Sign up</a>
+    </div>
+</footer>
+
+</body>
+</html>
