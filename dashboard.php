@@ -17,8 +17,8 @@ function calculateAge($dob) {
 
 $user_id = $_SESSION['user_id']; // Assuming user_id is stored in the session during login
 
-// Updated SQL Query: Retrieve location from the Address table using the address_id
-$sql = "SELECT u.First_Name, u.Last_Name, u.Middle_Name, u.Email, u.DOB
+// Updated SQL Query: Retrieve user details along with profile picture URL
+$sql = "SELECT u.First_Name, u.Last_Name, u.Middle_Name, u.Email, u.DOB, u.Profile_Photo_URL
         FROM User u
         WHERE u.user_id = '$user_id'";
 
@@ -30,6 +30,7 @@ if (mysqli_num_rows($result) > 0) {
     $email = $user['Email'];
     $DOB = $user['DOB'];
     $age = calculateAge($DOB);
+    $profile_photo = !empty($user['Profile_Photo_URL']) ? 'uploads/' . htmlspecialchars($user['Profile_Photo_URL']) : 'images/default-profile.png'; // Adjusted image path
 } else {
     // If user is not found, log them out and redirect to login page
     header("Location: logout.php");
@@ -166,7 +167,7 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
     <!-- Header with Logo, Title, and Sign-out Button -->
     <header>
         <div class="logo-container">
-            <img src="path/to/your/logo.png" alt="Matrimonial Hub Logo">
+            <img src="icon.png" alt="Matrimonial Hub Logo">
             <h1 class="title">Matrimonial Hub</h1>
         </div>
         <!-- Sign-out button -->
@@ -182,14 +183,17 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
             <a href="view_matches.php">View Matches</a>
             <a href="submit_preferences.php">Search Matches</a>
             <a href="my_profile_details.php">My Profile</a>
-            <a href="account_settings.php">Account Settings</a>
+            
+            <!--<a href="account_settings.php">Account Settings</a> -->
         </div>
+
 
         <!-- Main Content -->
         <div class="main-content">
 
             <!-- Profile Information -->
-            <div class="profile-info">
+            <div class="profile-info" style="display: flex; align-items: center;">
+        
                 <img src="<?php echo htmlspecialchars($profile_photo); ?>" alt="User Profile Picture">
                 <div>
                     <h2>Welcome, <?php echo htmlspecialchars($user_name); ?></h2>

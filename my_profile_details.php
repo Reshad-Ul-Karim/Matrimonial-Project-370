@@ -141,7 +141,6 @@ $conn->close();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
     <style>
@@ -182,12 +181,28 @@ $conn->close();
         .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 15px; }
         textarea { resize: vertical; }
         body:before { content: ''; position: absolute; top: -50px; left: -50px; right: -50px; bottom: -50px; background: linear-gradient(135deg, rgba(255, 111, 97, 0.6), rgba(255, 229, 180, 0.6)); z-index: -1; }
+        .profile-photo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .profile-photo img {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
 
 <div class="profile-container">
     <h2>Edit Profile</h2>
+
+    <!-- Profile Picture Display -->
+    <div class="profile-photo">
+        <img src="uploads/<?= htmlspecialchars($profile_photo_url) ?: 'default-profile.png'; ?>" alt="Profile Picture">
+    </div>
+
     <form method="POST" action="my_profile_details.php">
         <!-- Personal Information -->
         <label for="first_name">First Name:</label>
@@ -243,11 +258,23 @@ $conn->close();
         <label for="higher_secondary">Higher Secondary:</label>
         <input type="text" name="higher_secondary" value="<?= htmlspecialchars($higher_secondary) ?>">
 
-        <label for="undergrade">Undergraduate:</label>
-        <input type="text" name="undergrade" value="<?= htmlspecialchars($undergrade) ?>">
+        <label for="undergrade">Undergraduate::</label>
+                <select id="undergraduate" name="undergraduate">
+                    <option value="">Select Undergraduate Degree</option>
+                    <option value="BSC">B.Sc</option>
+                    <option value="BBA">BBA</option>
+                    <option value="BA">BA</option>
+                    <option value="DEGREE">Degree</option>
+                </select>
 
-        <label for="post_grade">Postgraduate:</label>
-        <input type="text" name="post_grade" value="<?= htmlspecialchars($post_grade) ?>">
+                <!-- Postgraduate -->
+        <label for="post_grade">Postgraduate :</label>
+        <select id="postgraduate" name="postgraduate">
+            <option value="">Select Postgraduate Degree</option>
+            <option value="MSC">M.Sc</option>
+            <option value="MBA">MBA</option>
+            <option value="MA">MA</option>
+        </select>
 
         <!-- Address Information -->
         <h2>Address</h2>
@@ -450,7 +477,6 @@ $conn->close();
             </optgroup>
         </select>
 
-
         <label for="complexion">Complexion:</label>
         <select name="complexion" required>
             <option value="Fair" <?= ($complexion == 'Fair') ? 'selected' : '' ?>>Fair</option>
@@ -461,7 +487,6 @@ $conn->close();
         </select>
         <label for="height">Height (cm):</label>
         <input type="number" name="height" value="<?= htmlspecialchars($height) ?>" step="0.01" required>
-
 
         <label for="weight">Weight (kg):</label>
         <input type="number" name="weight" value="<?= htmlspecialchars($weight) ?>" required>

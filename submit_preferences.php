@@ -264,7 +264,8 @@ $result = $conn->query($sql);
         <h1>Matrimonial Hub</h1>
         <div class="header-right">
             <a href="home.php">Home</a>
-            <a href="submit_preferences.php">Set Preferences</a>
+            <a href="dashboard.php">Dashboard</a>
+            <a href="my_profile_details.php">My Profile</a>
         </div>
     </header>
 
@@ -273,7 +274,7 @@ $result = $conn->query($sql);
         <div class="sidebar">
             <h2>Filter Users</h2>
             <form method="POST" action="">
-        	<!-- Profession -->
+                <!-- Profession -->
                 <label for="profession">Profession:</label>
                 <select name="profession">
                     <option value="">Select Profession</option>
@@ -462,12 +463,23 @@ $result = $conn->query($sql);
                 <input type="text" name="higher_secondary" placeholder="Enter your higher secondary education" value="<?php echo isset($_POST['higher_secondary']) ? htmlspecialchars($_POST['higher_secondary']) : ''; ?>">
 
                 <!-- Undergraduate -->
-                <label for="undergrade">Undergraduate:</label>
-                <input type="text" name="undergrade" placeholder="Enter your undergraduate degree" value="<?php echo isset($_POST['undergrade']) ? htmlspecialchars($_POST['undergrade']) : ''; ?>">
+                <label for="undergrade">Undergraduate::</label>
+                <select id="undergraduate" name="undergraduate">
+                    <option value="">Select Undergraduate Degree</option>
+                    <option value="BSC">B.Sc</option>
+                    <option value="BBA">BBA</option>
+                    <option value="BA">BA</option>
+                    <option value="DEGREE">Degree</option>
+                </select>
 
                 <!-- Postgraduate -->
-                <label for="post_grade">Postgraduate:</label>
-                <input type="text" name="post_grade" placeholder="Enter your postgraduate degree" value="<?php echo isset($_POST['post_grade']) ? htmlspecialchars($_POST['post_grade']) : ''; ?>">
+                <label for="post_grade">Postgraduate :</label>
+                <select id="postgraduate" name="postgraduate">
+                    <option value="">Select Postgraduate Degree</option>
+                    <option value="MSC">M.Sc</option>
+                    <option value="MBA">MBA</option>
+                    <option value="MA">MA</option>
+                </select>
 
                 <!-- Complexion -->
                 <label for="complexion">Complexion:</label>
@@ -481,8 +493,9 @@ $result = $conn->query($sql);
                 </select>
 
                 <!-- Height -->
-                <label for="height">Height (in meters):</label>
-                <input type="number" name="height" step="0.01" placeholder="Enter your height" value="<?php echo isset($_POST['height']) ? htmlspecialchars($_POST['height']) : ''; ?>">
+                <!--<label for="height">Height (cm):</label>
+                <input type="number" name="height" value="<?= htmlspecialchars($height) ?>" step="0.01" required>
+                -->
 
                 <!-- Submit Button -->
                 <button type="submit">Filter</button>
@@ -496,7 +509,11 @@ $result = $conn->query($sql);
                 <?php if ($result->num_rows > 0): ?>
                     <?php while($row = $result->fetch_assoc()): ?>
                         <div class="profile reveal">
-                            <img src="default-profile.png" alt="Profile Image"> <!-- Placeholder image -->
+                            <?php if ($row['Profile_Photo_URL']): ?>
+                                <img src="uploads/<?= htmlspecialchars($row['Profile_Photo_URL']) ?>" alt="Profile Image">
+                            <?php else: ?>
+                                <img src="default-profile.png" alt="Profile Image"> <!-- Placeholder image -->
+                            <?php endif; ?>
                             <div class="profile-info">
                                 <h3><?= htmlspecialchars($row['First_Name'] . ' ' . $row['Last_Name']) ?></h3>
                                 <p><strong>Age:</strong> <?= date_diff(date_create($row['DOB']), date_create('today'))->y ?></p>

@@ -144,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <!-- Background Video -->
     <video autoplay muted loop id="bg-video">
-        <source src="weddingbackground.mp4" type="video/mp4">
+        <source src="weddingbackground1.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 

@@ -28,13 +28,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nid = htmlspecialchars($_POST['nid']);  // Ensure NID is captured
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
+    // Handle profile picture upload
+    $profilePic = $_FILES['profile_picture'];
+    $target_dir = "uploads/";
+    $profile_photo = basename($profilePic["name"]); // Only get the file name
+    $target_file = $target_dir . $profile_photo; // Full path for the uploaded file
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+    // Check if the file is an image and if it is a jpg or jpeg
+    $check = getimagesize($profilePic["tmp_name"]);
+    if ($check === false) {
+        die("File is not an image.");
+    }
+
+    if ($imageFileType != "jpg" && $imageFileType != "jpeg") {
+        die("Only JPG and JPEG files are allowed.");
+    }
+
+    // Move the uploaded file to the target directory
+    if (!move_uploaded_file($profilePic["tmp_name"], $target_file)) {
+        die("There was an error uploading the profile picture.");
+    }
+
     // Start a database transaction to ensure data consistency
     mysqli_begin_transaction($conn);
 
     try {
         // Insert the data into the 'User' table
-        $query = "INSERT INTO User (user_id, First_Name, Middle_Name, Last_Name, DOB, Gender, Profession, Religion, Ethnicity, Email, NID, Password, Registration_Date, Account_Status) 
-                  VALUES ('$userId', '$firstName', '$middleName', '$lastName', '$dob', '$gender', '$profession', '$religion', '$ethnicity', '$email', '$nid', '$password', CURDATE(), 'Active')";
+        $query = "INSERT INTO User (user_id, First_Name, Middle_Name, Last_Name, DOB, Gender, Profession, Religion, Ethnicity, Email, NID, Password, Profile_Photo_URL, Registration_Date, Account_Status) 
+                  VALUES ('$userId', '$firstName', '$middleName', '$lastName', '$dob', '$gender', '$profession', '$religion', '$ethnicity', '$email', '$nid', '$password', '$profile_photo', CURDATE(), 'Active')";
         
         if (!mysqli_query($conn, $query)) {
             throw new Exception("Error inserting user data: " . mysqli_error($conn));
@@ -77,9 +99,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -87,137 +106,79 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Profile</title>
     <style>
-        /* Gradient background */
-        /* Gradient background */
-                    body {
-                        margin: 0;
-                        font-family: 'Arial', sans-serif;
-                        background: linear-gradient(135deg, #ff6f61, #ffe5b4);
-                        min-height: 100vh; /* Use min-height instead of height for better scaling */
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        padding: 20px; /* Add padding to ensure spacing on small screens */
-                    }
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6f61, #ffe5b4);
+            min-height: 100vh; /* Use min-height instead of height for better scaling */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px; /* Add padding to ensure spacing on small screens */
+        }
 
-                    /* Form container */
-                    .profile-container {
-                        background-color: #ffffff;
-                        padding: 20px;
-                        width: 100%; /* Adjust width for small screens */
-                        max-width: 400px; /* Keep a max-width for larger screens */
-                        border-radius: 15px;
-                        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-                        animation: slideIn 0.6s ease-out; /* Slide-in animation */
-                    }
+        .profile-container {
+            background-color: #ffffff;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.6s ease-out;
+        }
 
-                    /* Input fields styling */
-                    input[type="text"], input[type="date"], input[type="email"], input[type="password"], select {
-                        width: 100%; /* Use 100% width for better responsiveness */
-                        padding: 10px;
-                        margin-bottom: 15px;
-                        border-radius: 5px;
-                        border: 1px solid #ccc;
-                        box-sizing: border-box;
-                        transition: border-color 0.3s ease;
-                    }
+        input[type="text"], input[type="date"], input[type="email"], input[type="password"], select, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
 
-                    input:focus {
-                        border-color: #ff6f61; /* Highlight border on focus */
-                        outline: none;
-                    }
+        input:focus {
+            border-color: #ff6f61;
+            outline: none;
+        }
 
-                    /* Submit button styling */
-                    .submit-btn {
-                        width: 100%;
-                        padding: 10px;
-                        background-color: #ff6f61;
-                        color: white;
-                        border: none;
-                        border-radius: 5px;
-                        font-size: 16px;
-                        cursor: pointer;
-                        transition: background-color 0.3s ease;
-                        margin: 2px;
-                    }
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 2px;
+        }
 
-                    .submit-btn:hover {
-                        background-color: #ff4f41; /* Darker color on hover */
-                    }
+        .submit-btn:hover {
+            background-color: #ff4f41;
+        }
 
-                    /* Heading styling */
-                    h2 {
-                        text-align: center;
-                        color: #ff6f61;
-                        margin-bottom: 20px;
-                    }
+        h2 {
+            text-align: center;
+            color: #ff6f61;
+            margin-bottom: 20px;
+        }
 
-                    /* Keyframe animation for form container */
-                    @keyframes slideIn {
-                        from {
-                            opacity: 0;
-                            transform: translateY(30px);
-                        }
-                        to {
-                            opacity: 1;
-                            transform: translateY(0);
-                        }
-                    }
-
-                    /* Animation for input fields */
-                    .profile-container input, .profile-container select {
-                        animation: fadeIn 1s ease forwards;
-                    }
-
-                    @keyframes fadeIn {
-                        from {
-                            opacity: 0;
-                        }
-                        to {
-                            opacity: 1;
-                        }
-                    }
-
-                    /* Subtle background animation */
-                    body:before {
-                        content: '';
-                        position: absolute;
-                        top: -50px;
-                        left: -50px;
-                        right: -50px;
-                        bottom: -50px;
-                        background: linear-gradient(135deg, rgba(255, 111, 97, 0.6), rgba(255, 229, 180, 0.6));
-                        z-index: -1;
-                        animation: animateBg 5s ease-in-out infinite;
-                    }
-
-                    @keyframes animateBg {
-                        0% {
-                            background-position: 0 0;
-                        }
-                        50% {
-                            background-position: 100% 100%;
-                        }
-                        100% {
-                            background-position: 0 0;
-                        }
-                    }
-
-                    /* Add responsive scaling for smaller screens */
-                    @media (max-width: 600px) {
-                        .profile-container {
-                            padding: 15px;
-                            max-width: 100%; /* Allow container to take full width on small screens */
-                        }
-                    }
-
+        #imagePreview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <div class="profile-container">
     <h2>Create Your Profile</h2>
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data"> <!-- enctype added for file upload -->
         <label for="first_name">First Name</label>
         <input type="text" name="first_name" id="first_name" required>
         <label for="Middle_name">Middle Name</label>
@@ -403,7 +364,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </optgroup>
 </select>
 
-
         <label for="religion">Religion</label>
         <select name="religion" id="religion" required>
             <option value="Muslim">Muslim</option>
@@ -413,33 +373,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </select>
 
         <label for="ethnicity">Ethnicity</label>
-            <select name="ethnicity" id="ethnicity" required>
-                <option value="Caucasian">Caucasian</option>
-                <option value="African">African</option>
-                <option value="Asian">Asian</option>
-                <option value="Hispanic">Hispanic</option>
-                <option value="Middle Eastern">Middle Eastern</option>
-                <option value="Native American">Native American</option>
-                <option value="Pacific Islander">Pacific Islander</option>
-                <option value="Other">Other</option>
-            </select>
-
+        <select name="ethnicity" id="ethnicity" required>
+            <option value="Caucasian">Caucasian</option>
+            <option value="African">African</option>
+            <option value="Asian">Asian</option>
+            <option value="Hispanic">Hispanic</option>
+            <option value="Middle Eastern">Middle Eastern</option>
+            <option value="Native American">Native American</option>
+            <option value="Pacific Islander">Pacific Islander</option>
+            <option value="Other">Other</option>
+        </select>
 
         <label for="email">Email</label>
         <input type="email" name="email" id="email" required>
 
         <label for="nid">NID NO.</label>
         <input type="text" name="nid" id="nid" required>
-        
+
         <label for="password">Password</label>
         <input type="password" name="password" id="password" required>
+
+        <!-- New Profile Picture Upload Section -->
+        <label for="profile_picture">Profile Picture (JPG, JPEG only)</label>
+        <input type="file" name="profile_picture" id="profile_picture" accept="image/jpeg, image/jpg" required>
+        <img id="imagePreview" src="#" alt="Profile Preview" />
 
         <button type="submit" class="submit-btn">Create Profile</button>
 
         <button type="submit" class="submit-btn" onclick="window.location.href='index.php';">Already have an account</button>
     </form>
-
-
 </div>
 
+<script>
+    // JavaScript to show the image preview
+    document.getElementById('profile_picture').addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const imagePreview = document.getElementById('imagePreview');
+                imagePreview.src = event.target.result;
+                imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+
 </body>
+</html>
