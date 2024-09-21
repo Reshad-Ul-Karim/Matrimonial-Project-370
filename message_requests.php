@@ -30,66 +30,104 @@ $result = $stmt->get_result();
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
             margin: 0;
             padding: 20px;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #444;
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
         .profile {
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 15px;
-            background-color: #fff;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #fafafa;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
         }
         .profile img {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             object-fit: cover;
+            margin-right: 15px;
         }
         .profile-details {
-            display: inline-block;
-            vertical-align: top;
-            margin-left: 10px;
+            flex-grow: 1;
+        }
+        .profile-details p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        .profile-details p:first-child {
+            font-weight: bold;
+            font-size: 18px;
         }
         button {
-            padding: 5px 15px;
-            margin-left: 5px;
+            padding: 8px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
         }
         .accept {
-            background-color: #4CAF50;
+            background-color: #28a745;
             color: white;
+            transition: background-color 0.3s ease;
+        }
+        .accept:hover {
+            background-color: #218838;
         }
         .reject {
-            background-color: #f44336;
+            background-color: #dc3545;
             color: white;
+            transition: background-color 0.3s ease;
+        }
+        .reject:hover {
+            background-color: #c82333;
+        }
+        .no-requests {
+            text-align: center;
+            font-size: 18px;
+            padding: 50px;
+            color: #666;
         }
     </style>
 </head>
 <body>
     <h1>Message Requests</h1>
-    <div>
+    <div class="container">
         <?php if ($result->num_rows > 0): ?>
             <?php while ($row = $result->fetch_assoc()): ?>
-                
-                    <div class="profile-photo">
-                       <img src="uploads/<?= htmlspecialchars($profile_photo_url) ?: 'default-profile.png'; ?>" alt="Profile Picture">
-                    </div>
+                <div class="profile">
+                    <img src="uploads/<?= htmlspecialchars($row['Profile_Photo_URL']) ?: 'default-profile.png'; ?>" alt="Profile Picture">
                     <div class="profile-details">
                         <p><?= htmlspecialchars($row['First_Name'] . ' ' . $row['Last_Name']) ?></p>
                         <p>Request sent on: <?= date('M d, Y H:i', strtotime($row['request_time'])) ?></p>
-                        <form action="process_request.php" method="post">
-                            <input type="hidden" name="request_id" value="<?= $row['request_id'] ?>">
-                            <button type="submit" name="action" value="accept" class="accept">Accept</button>
-                            <button type="submit" name="action" value="reject" class="reject">Reject</button>
-                        </form>
                     </div>
+                    <form action="process_request.php" method="post" style="display: flex;">
+                        <input type="hidden" name="request_id" value="<?= $row['request_id'] ?>">
+                        <button type="submit" name="action" value="accept" class="accept">Accept</button>
+                        <button type="submit" name="action" value="reject" class="reject">Reject</button>
+                    </form>
                 </div>
             <?php endwhile; ?>
         <?php else: ?>
-            <p>No message requests found.</p>
+            <p class="no-requests">No message requests found.</p>
         <?php endif; ?>
     </div>
 </body>
