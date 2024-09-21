@@ -83,6 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!mysqli_query($conn, $activityLogQuery)) {
             throw new Exception("Error inserting activity log: " . mysqli_error($conn));
         }
+        $chatUsersQuery = "INSERT INTO `chat_users`(`user_id`, `unique_id`, `fname`, `lname`, `email`, `password`, `img`, `status`) VALUES ('$userId','$userId','$firstName','$lastName','$email','$password','','')";
+        if (!mysqli_query($conn, $chatUsersQuery)) {
+            throw new Exception("Error inserting chat users: " . mysqli_error($conn));
+        }
 
         // Commit the transaction
         mysqli_commit($conn);

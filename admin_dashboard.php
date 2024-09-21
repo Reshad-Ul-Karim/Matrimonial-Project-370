@@ -15,10 +15,13 @@ $search = '';
 // Check if the search bar is used
 if (isset($_POST['search_user'])) {
     $search = mysqli_real_escape_string($conn, $_POST['search']);
-    $query = "SELECT user_id, First_Name, Last_Name, Religion, DOB, Ethnicity, Account_Status, Profile_Photo_URL FROM User WHERE First_Name LIKE '%$search%' OR Last_Name LIKE '%$search%'";
+    $query = "SELECT user_id, First_Name, Last_Name, Religion, DOB, Ethnicity, Account_Status, Profile_Photo_URL 
+              FROM User 
+              WHERE First_Name LIKE '%$search%' OR Last_Name LIKE '%$search%'";
 } else {
     // Fetch Users from Database
-    $query = "SELECT user_id, First_Name, Last_Name, Religion, DOB, Ethnicity, Account_Status, Profile_Photo_URL FROM User";
+    $query = "SELECT user_id, First_Name, Last_Name, Religion, DOB, Ethnicity, Account_Status, Profile_Photo_URL 
+              FROM User";
 }
 
 $result = mysqli_query($conn, $query);
@@ -31,6 +34,7 @@ if (isset($_POST['change_status'])) {
     $query = "UPDATE User SET Account_Status = '$new_status' WHERE user_id = '$user_id'";
     if (mysqli_query($conn, $query)) {
         $success = "Status changed successfully.";
+        header("Refresh:0"); // Refresh the page to immediately reflect changes
     } else {
         $error = "Error changing status: " . mysqli_error($conn);
     }
@@ -43,11 +47,13 @@ if (isset($_POST['delete_profile'])) {
     $query = "DELETE FROM User WHERE user_id = '$user_id'";
     if (mysqli_query($conn, $query)) {
         $success = "Profile deleted successfully.";
+        header("Refresh:0"); // Refresh the page to immediately reflect changes
     } else {
         $error = "Error deleting profile: " . mysqli_error($conn);
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -241,17 +247,16 @@ if (isset($_POST['delete_profile'])) {
                             <form action="admin_dashboard.php" method="post" style="display:inline;">
                                 <input type="hidden" name="user_id" value="<?php echo $row['user_id']; ?>">
                                 <select name="new_status">
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-
+                                    <option value="Active" <?php echo ($row['Account_Status'] == 'Active') ? 'selected' : ''; ?>>Active</option>
+                                    <option value="Inactive" <?php echo ($row['Account_Status'] == 'Inactive') ? 'selected' : ''; ?>>Inactive</option>
                                 </select>
                                 <button type="submit" name="change_status">Change Status</button>
                             </form>
 
                             <!-- Delete Profile Form -->
-                            <form action="admin_dashboard.php" method="post" style="display:inline;">
+                            <form action="admin_dashboard.php" method="post" style="display:inline;" onsubmit="return confirmDelete();">
                                 <input type="hidden" name="user_id" value="<?php echo $row['user_id']; ?>">
-                                <button type="submit" name="delete_profile" onclick="return confirm('Are you sure you want to delete this profile?');">Delete</button>
+                                <button type="submit" name="delete_profile">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -264,6 +269,15 @@ if (isset($_POST['delete_profile'])) {
     <footer>
         <p>&copy; 2024 Matrimonial Hub. All Rights Reserved.</p>
     </footer>
+
+
+
+    <script>
+        function confirmDelete() {
+            console.log('Delete button clicked');
+            return confirm('Are you sure you want to delete this profile?');
+        }
+    </script>
 
 </body>
 

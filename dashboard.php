@@ -38,7 +38,7 @@ if (mysqli_num_rows($result) > 0) {
 }
 
 // Example queries for statistics
-$profile_views = 102; // Replace with actual queries if you have profile view tracking
+//$profile_views = 102; // Replace with actual queries if you have profile view tracking
 $matches_found = 15;  // Replace with a query that counts matching profiles
 $messages_received = 8; // Replace with a query that counts the number of received messages
 ?>
@@ -109,7 +109,7 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
             border-radius: 10px;
             color: white;
         }
-        .sidebar a {
+        .sidebar a, .sidebar button {
             display: block;
             color: white;
             text-decoration: none;
@@ -121,8 +121,12 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
             text-align: center;
             transition: background-color 0.3s ease;
         }
-        .sidebar a:hover {
-            background-color: #ff9999;
+        .sidebar button {
+            border: none;
+            cursor: pointer;
+        }
+        .sidebar a:hover, .sidebar button:hover {
+            background-color: #ffcccc;
         }
         .main-content {
             flex: 3;
@@ -167,7 +171,7 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
     <!-- Header with Logo, Title, and Sign-out Button -->
     <header>
         <div class="logo-container">
-            <img src="icon.png" alt="Matrimonial Hub Logo">
+            <img src="path/to/your/logo.png" alt="Matrimonial Hub Logo">
             <h1 class="title">Matrimonial Hub</h1>
         </div>
         <!-- Sign-out button -->
@@ -183,10 +187,11 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
             <a href="view_matches.php">View Matches</a>
             <a href="submit_preferences.php">Search Matches</a>
             <a href="my_profile_details.php">My Profile</a>
-            
-            <!--<a href="account_settings.php">Account Settings</a> -->
+            <a href="account_settings.php">Account Settings</a>
+            <button onclick="window.location.href='message_requests.php';">Message Requests</button>
+            <!-- New link to show accepted requests -->
+            <a href="accepted_requests.php">Accepted Requests</a>
         </div>
-
 
         <!-- Main Content -->
         <div class="main-content">
@@ -202,29 +207,12 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
                 </div>
             </div>
 
-            <!-- Profile Statistics -->
-            <div class="profile-stats">
-                <h2>Your Profile Stats</h2>
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <h3>Profile Views</h3>
-                        <p><?php echo $profile_views; ?></p>
-                    </div>
-                    <div class="stat-box">
-                        <h3>Matches Found</h3>
-                        <p><?php echo $matches_found; ?></p>
-                    </div>
-                    <div class="stat-box">
-                        <h3>Messages Received</h3>
-                        <p><?php echo $messages_received; ?></p>
-                    </div>
-                </div>
-            </div>
-
+            
             <!-- Action Buttons -->
             <div class="actions">
                 <button onclick="window.location.href='search_result.php';">View Matches</button>
                 <button onclick="window.location.href='edit_preferences.php';">Edit Preferences</button>
+                <button onclick="window.location.href='login.php';">chat</button>
             </div>
 
         </div>

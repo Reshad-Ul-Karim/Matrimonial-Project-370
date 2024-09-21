@@ -51,7 +51,44 @@ foreach ($filters as $key => $value) {
 // Execute query and fetch results
 $result = $conn->query($sql);
 
-// Start HTML
+// Handle send request form submission
+if (isset($_POST['send_request'])) {
+    $sender_id = $_POST['sender_id'];
+    $receiver_id = $_POST['receiver_id'];
+
+    // Check if there's a pending request between the same users
+    $check_sql = "SELECT * FROM request WHERE sender_id = ? AND receiver_id = ? AND request_status = 'Pending'";
+    if ($check_stmt = $conn->prepare($check_sql)) {
+        $check_stmt->bind_param("ss", $sender_id, $receiver_id);
+        $check_stmt->execute();
+        $check_result = $check_stmt->get_result();
+
+        if ($check_result->num_rows > 0) {
+            // There's already a pending request
+            echo "<script>alert('You have already sent a request. Please wait for it to be processed.');</script>";
+        } else {
+            // Proceed with sending the request
+            $request_id = bin2hex(random_bytes(10)); // Generate a random request ID
+            $request_status = 'Pending';
+            $request_time = date('Y-m-d H:i:s'); // Current time in MySQL datetime format
+
+            $insert_sql = "INSERT INTO request (request_id, sender_id, receiver_id, request_status, request_time) VALUES (?, ?, ?, ?, ?)";
+            if ($stmt = $conn->prepare($insert_sql)) {
+                $stmt->bind_param("sssss", $request_id, $sender_id, $receiver_id, $request_status, $request_time);
+                $stmt->execute();
+                $stmt->close();
+                echo "<script>alert('Request sent successfully!');</script>";
+            } else {
+                echo "<script>alert('Error preparing statement.');</script>";
+            }
+        }
+        $check_stmt->close();
+    }
+}
+
+// Execute query and fetch results
+$result = $conn->query($sql);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,7 +114,7 @@ $result = $conn->query($sql);
             justify-content: space-between;
             align-items: center;
             color: white;
-            flex-wrap: wrap; /* Ensure proper wrapping on smaller screens */
+            flex-wrap: wrap;
             text-align: center;
             position: relative;
         }
@@ -112,7 +149,6 @@ $result = $conn->query($sql);
             overflow-y: hidden;
         }
 
-        /* Sidebar styling */
         .sidebar {
             width: 300px;
             background-color: #ffe4e1;
@@ -154,7 +190,6 @@ $result = $conn->query($sql);
             background-color: #ff9999;
         }
 
-        /* Main content styling */
         .main-content {
             flex-grow: 1;
             padding: 20px;
@@ -238,7 +273,6 @@ $result = $conn->query($sql);
             background-color: #ff9999;
         }
 
-        /* Scrollbar styling for sidebar and profile-container */
         .sidebar::-webkit-scrollbar,
         .profile-container::-webkit-scrollbar {
             width: 10px;
@@ -264,21 +298,17 @@ $result = $conn->query($sql);
         <h1>Matrimonial Hub</h1>
         <div class="header-right">
             <a href="home.php">Home</a>
-            <a href="dashboard.php">Dashboard</a>
-            <a href="my_profile_details.php">My Profile</a>
+            <a href="submit_preferences.php">Set Preferences</a>
         </div>
     </header>
 
     <div class="container">
-        <!-- Sidebar -->
         <div class="sidebar">
             <h2>Filter Users</h2>
             <form method="POST" action="">
-                <!-- Profession -->
                 <label for="profession">Profession:</label>
                 <select name="profession">
                     <option value="">Select Profession</option>
-                    
                     <optgroup label="Technology and IT">
                         <option value="software-engineer" <?php echo (isset($_POST['profession']) && $_POST['profession'] == 'software-engineer') ? 'selected' : ''; ?>>Software Engineer</option>
                         <option value="data-scientist" <?php echo (isset($_POST['profession']) && $_POST['profession'] == 'data-scientist') ? 'selected' : ''; ?>>Data Scientist</option>
@@ -423,7 +453,6 @@ $result = $conn->query($sql);
                     <option value="Female" <?php echo (isset($_POST['gender']) && $_POST['gender'] == 'Female') ? 'selected' : ''; ?>>Female</option>
                     <option value="Other" <?php echo (isset($_POST['gender']) && $_POST['gender'] == 'Other') ? 'selected' : ''; ?>>Other</option>
                 </select>
-
                 <!-- Religion -->
                 <label for="religion">Religion:</label>
                 <select name="religion">
@@ -502,7 +531,6 @@ $result = $conn->query($sql);
             </form>
         </div>
 
-        <!-- Main content area -->
         <div class="main-content">
             <h2>Your Best Matches</h2>
             <div class="profile-container" id="profile-container">
@@ -512,27 +540,26 @@ $result = $conn->query($sql);
                             <?php if ($row['Profile_Photo_URL']): ?>
                                 <img src="uploads/<?= htmlspecialchars($row['Profile_Photo_URL']) ?>" alt="Profile Image">
                             <?php else: ?>
-                                <img src="default-profile.png" alt="Profile Image"> <!-- Placeholder image -->
+                                <img src="default-profile.png" alt="Profile Image"> 
                             <?php endif; ?>
                             <div class="profile-info">
                                 <h3><?= htmlspecialchars($row['First_Name'] . ' ' . $row['Last_Name']) ?></h3>
                                 <p><strong>Age:</strong> <?= date_diff(date_create($row['DOB']), date_create('today'))->y ?></p>
                                 <p><strong>Profession:</strong> <?= htmlspecialchars($row['Profession']) ?></p>
-                                <p><strong>Religion:</strong> <?= htmlspecialchars($row['Religion']) ?></p>
-                                <p><strong>Ethnicity:</strong> <?= htmlspecialchars($row['Ethnicity']) ?></p>
-                                <p class="match-percentage">Match Strength: <?= rand(70, 100) ?>%</p> <!-- Example match percentage -->
+                                <p class="match-percentage">Match Strength: <?= rand(70, 100) ?>%</p>
                             </div>
                             <div class="profile-actions">
-                                <a href="chatapp.php?user_id=<?= htmlspecialchars($row['user_id']) ?>">
-                                    <button>Send Message Request</button>
-                                </a>
+                                <form method="POST" action="">
+                                    <input type="hidden" name="sender_id" value="<?= $_SESSION['user_id'] ?>">
+                                    <input type="hidden" name="receiver_id" value="<?= $row['user_id'] ?>">
+                                    <button type="submit" name="send_request">Send Message Request</button>
+                                </form>
                             </div>
                         </div>
                     <?php endwhile; ?>
                 <?php else: ?>
                     <p>No matches found.</p>
                 <?php endif; ?>
-                <?php $conn->close(); ?>
             </div>
         </div>
     </div>
@@ -554,7 +581,6 @@ $result = $conn->query($sql);
 
         window.addEventListener('scroll', revealOnScroll);
     </script>
-
 </body>
 
 </html>
