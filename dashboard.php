@@ -38,7 +38,7 @@ if (mysqli_num_rows($result) > 0) {
 }
 
 // Example queries for statistics
-//$profile_views = 102; // Replace with actual queries if you have profile view tracking
+$profile_views = 102; // Replace with actual queries if you have profile view tracking
 $matches_found = 15;  // Replace with a query that counts matching profiles
 $messages_received = 8; // Replace with a query that counts the number of received messages
 ?>
@@ -207,7 +207,25 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
                 </div>
             </div>
 
-            
+            <!-- Profile Statistics -->
+            <div class="profile-stats">
+                <h2>Your Profile Stats</h2>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <h3>Profile Views</h3>
+                        <p><?php echo $profile_views; ?></p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Matches Found</h3>
+                        <p><?php echo $matches_found; ?></p>
+                    </div>
+                    <div the="stat-box">
+                        <h3>Messages Received</h3>
+                        <p><?php echo $messages_received; ?></p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Action Buttons -->
             <div class="actions">
                 <button onclick="window.location.href='search_result.php';">View Matches</button>
