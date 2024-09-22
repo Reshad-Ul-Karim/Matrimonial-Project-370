@@ -34,11 +34,11 @@ if(isset($_SESSION['user_id'])){
             } else {
                 // Incoming message with user image
                 $output .= '<div class="chat incoming">
-                            <img src="php/uploads/'. htmlspecialchars($row['img']) .'" alt="User Image">
-                            <div class="details">
-                                <p>'. htmlspecialchars($decrypted_message) .'</p>
-                            </div>
-                            </div>';
+                <div class="details">
+                    <p>'. htmlspecialchars($decrypted_message) .'</p>
+                </div>
+              </div>';
+  
             }
         }
 

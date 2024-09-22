@@ -17,7 +17,7 @@ $sql = "SELECT r.request_id, r.sender_id, r.request_time, u.First_Name, u.Last_N
         WHERE r.receiver_id = ? AND r.request_status = 'Pending'";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id);
+$stmt->bind_param("s", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -40,6 +40,23 @@ $result = $stmt->get_result();
             color: #444;
             font-size: 36px;
             margin-bottom: 30px;
+        }
+        .header-right {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        .header-right a {
+            background-color: #f76c6c;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 50px;
+        }
+        .header-right a:hover {
+            background-color: #ff9999;
         }
         .container {
             max-width: 800px;
@@ -109,7 +126,14 @@ $result = $stmt->get_result();
     </style>
 </head>
 <body>
+
+    <!-- Go to Dashboard button -->
+    <div class="header-right">
+        <a href="dashboard.php">Go to Dashboard</a>
+    </div>
+
     <h1>Message Requests</h1>
+
     <div class="container">
         <?php if ($result->num_rows > 0): ?>
             <?php while ($row = $result->fetch_assoc()): ?>
@@ -130,8 +154,10 @@ $result = $stmt->get_result();
             <p class="no-requests">No message requests found.</p>
         <?php endif; ?>
     </div>
+
 </body>
 </html>
+
 <?php
 $stmt->close();
 $conn->close();

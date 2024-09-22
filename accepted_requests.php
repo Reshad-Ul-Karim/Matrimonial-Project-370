@@ -10,17 +10,16 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id']; // Get the user ID from the session
 
-// SQL query to find all users who have accepted the requests where the current user is the sender
-$sql = "SELECT u.user_id, u.First_Name, u.Middle_Name, u.Last_Name, u.Profile_Photo_URL
+// SQL query to find all users involved in accepted requests with the current user
+$sql = "SELECT DISTINCT u.user_id, u.First_Name, u.Middle_Name, u.Last_Name, u.Profile_Photo_URL
         FROM User u
-        INNER JOIN Request r ON u.user_id = r.receiver_id 
-        WHERE r.sender_id = ? AND r.request_status = 'Accepted'";
+        INNER JOIN Request r ON u.user_id IN (r.receiver_id, r.sender_id) 
+        WHERE (r.sender_id = ? OR r.receiver_id = ?) AND r.request_status = 'Accepted' AND u.user_id != ?";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $user_id); // Bind the user_id (which is a string according to your table definition)
+$stmt->bind_param("sss", $user_id, $user_id, $user_id); // Bind the user_id three times
 $stmt->execute();
 $result = $stmt->get_result();
-
 ?>
 
 <!DOCTYPE html>
@@ -29,9 +28,8 @@ $result = $stmt->get_result();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accepted Requests</title>
+    <link href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap" rel="stylesheet">
     <style>
-        /* Your existing CSS for layout, typography, and styling */
-        @import url('https://fonts.googleapis.com/css2?family=Product+Sans&display=swap');
         body {
             font-family: 'Product Sans', Arial, sans-serif;
             background-color: #f0f8ff;
@@ -164,7 +162,7 @@ $result = $stmt->get_result();
     <!-- Header with Logo, Title, and Sign-out Button -->
     <header>
         <div class="logo-container">
-            <img src="path/to/your/logo.png" alt="Matrimonial Hub Logo">
+            <img src="icon.png" alt="Matrimonial Hub Logo">
             <h1 class="title">Matrimonial Hub</h1>
         </div>
         <!-- Sign-out button -->
@@ -177,17 +175,18 @@ $result = $stmt->get_result();
         <!-- Sidebar with Links -->
         <div class="sidebar">
             <h2>Menu</h2>
-            <a href="view_matches.php">View Matches</a>
+            
             <a href="submit_preferences.php">Search Matches</a>
-            <a href="my_profile_details.php">My Profile</a>
-            <a href="account_settings.php">Account Settings</a>
+            <a href="accepted_requests.php">My matches</a>
+            <a href="my_profile_details.php">Edit Profile</a>
             <button onclick="window.location.href='message_requests.php';">Message Requests</button>
-            <a href="accepted_requests.php">Accepted Requests</a>
+            <a href="dashboard.php">Go to Dashboard</a>
+            
         </div>
 
         <!-- Main Content -->
         <div class="main-content">
-            <h2>Accepted Requests</h2>
+            <h2>My Matches</h2>
 
             <!-- Accepted Requests List -->
             <div class="accepted-requests-list">
@@ -201,8 +200,8 @@ $result = $stmt->get_result();
                         // Display profile photo or default image if no photo is available
                         $profile_photo = !empty($row['Profile_Photo_URL']) ? 'uploads/' . htmlspecialchars($row['Profile_Photo_URL']) : 'images/default-profile.png';
 
-                        // Chat button linking to users.php with user_id as parameter
-                        $chat_url = "users.php?user_id=" . $row['user_id'];
+                        // Chat button linking to chat.php with user_id as parameter
+                        $chat_url = "chat.php?user_id=" . $row['user_id'];
 
                         echo "<li><img src='" . htmlspecialchars($profile_photo) . "' alt='Profile Photo'>" . htmlspecialchars(trim($full_name)) . "
                               <a href='" . htmlspecialchars($chat_url) . "' class='chat-button'>Chat</a></li>";

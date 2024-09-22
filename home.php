@@ -422,13 +422,13 @@
     <footer>
         <p>&copy; 2024 Matrimonial Hub. All Rights Reserved.</p>
         <div class="footer-links">
-            <a href="privacy.php">Privacy Policy</a> |
-            <a href="terms.php">Terms & Conditions</a> |
+            <a href="privacypolicy.html">Privacy Policy</a> |
+            <a href="terms and conditions (2).html">Terms & Conditions</a> |
             <a href="contact.php">Contact Us</a>
         </div>
     </footer>
     <!-- Floating Chat Button -->
-    <div class="floating-chat-btn" onclick="location.href='chatapp/index.php'">
+    <div class="floating-chat-btn" onclick="location.href='index.php'">
             <img src="party.png" alt="Chat" />
     </div>
     

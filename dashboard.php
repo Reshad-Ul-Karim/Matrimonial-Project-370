@@ -96,7 +96,7 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
             display: flex;
             max-width: 1200px;
             margin: 30px auto;
-            padding: 20px;
+            padding: 10px;
             background-color: #ffe4e1;
             border-radius: 10px;
             box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
@@ -105,7 +105,7 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
         .sidebar {
             flex: 1;
             background-color: #f76c6c;
-            padding: 20px;
+            padding: 30px;
             border-radius: 10px;
             color: white;
         }
@@ -136,13 +136,29 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
             border-radius: 10px;
             box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
         }
-        .profile-info img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 20px;
-        }
+                    .profile-info {
+                text-align: center; /* Center the image and text */
+                margin-bottom: 20px;
+            }
+
+            .profile-info img {
+                width: 300px;
+                height: 300px;
+                border-radius: 50%;
+                object-fit: cover;
+                margin-bottom: 20px; /* Space between the image and the welcome text */
+            }
+
+            .profile-info h2 {
+                font-size: 30px;
+                margin: 0 0 10px; /* Space around the welcome text */
+            }
+
+            .profile-info p {
+                font-size: 20px;
+                margin: 10px 0;
+            }
+
         .actions button {
             background-color: #f76c6c;
             color: white;
@@ -171,7 +187,7 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
     <!-- Header with Logo, Title, and Sign-out Button -->
     <header>
         <div class="logo-container">
-            <img src="path/to/your/logo.png" alt="Matrimonial Hub Logo">
+            <img src="icon.png" alt="Matrimonial Hub Logo">
             <h1 class="title">Matrimonial Hub</h1>
         </div>
         <!-- Sign-out button -->
@@ -184,20 +200,20 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
         <!-- Sidebar with Links -->
         <div class="sidebar">
             <h2>Menu</h2>
-            <a href="view_matches.php">View Matches</a>
+            
             <a href="submit_preferences.php">Search Matches</a>
             <a href="my_profile_details.php">My Profile</a>
-            <a href="account_settings.php">Account Settings</a>
+            
             <button onclick="window.location.href='message_requests.php';">Message Requests</button>
             <!-- New link to show accepted requests -->
-            <a href="accepted_requests.php">Accepted Requests</a>
+            <a href="accepted_requests.php">Your Matches</a>
         </div>
 
         <!-- Main Content -->
         <div class="main-content">
 
             <!-- Profile Information -->
-            <div class="profile-info" style="display: flex; align-items: center;">
+            <div class="profile-info" style="align-items: center;">
         
                 <img src="<?php echo htmlspecialchars($profile_photo); ?>" alt="User Profile Picture">
                 <div>
@@ -207,31 +223,8 @@ $messages_received = 8; // Replace with a query that counts the number of receiv
                 </div>
             </div>
 
-            <!-- Profile Statistics -->
-            <div class="profile-stats">
-                <h2>Your Profile Stats</h2>
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <h3>Profile Views</h3>
-                        <p><?php echo $profile_views; ?></p>
-                    </div>
-                    <div class="stat-box">
-                        <h3>Matches Found</h3>
-                        <p><?php echo $matches_found; ?></p>
-                    </div>
-                    <div the="stat-box">
-                        <h3>Messages Received</h3>
-                        <p><?php echo $messages_received; ?></p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Action Buttons -->
-            <div class="actions">
-                <button onclick="window.location.href='search_result.php';">View Matches</button>
-                <button onclick="window.location.href='edit_preferences.php';">Edit Preferences</button>
-                <button onclick="window.location.href='login.php';">chat</button>
-            </div>
+            
 
         </div>
     </div>

@@ -36,7 +36,7 @@
   <div class="wrapper">
     <section class="chat-area">
       <header>
-        <a href="users.php" class="back-icon"><i class="fas fa-arrow-left"></i></a>
+        <a href="accepted_requests.php" class="back-icon"><i class="fas fa-arrow-left"></i></a>
         
         <!-- Display profile photo or default image -->
         <img src="uploads/<?php echo !empty($row['Profile_Photo_URL']) ? htmlspecialchars($row['Profile_Photo_URL']) : 'default-profile.png'; ?>" alt="Profile Picture">

@@ -34,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $marital_status = $_POST['marital_status'];
     $secondary_education = $_POST['secondary_education'];
     $higher_secondary = $_POST['higher_secondary'];
-    $undergrade = $_POST['undergrade'];
-    $post_grade = $_POST['post_grade'];
+    $undergrade = $_POST['undergraduate']; // Change here
+    $post_grade = $_POST['postgraduate']; // Change here
     $road_number = $_POST['road_number'];
     $street_number = $_POST['street_number'];
     $building_number = $_POST['building_number'];
@@ -136,6 +136,7 @@ if ($stmt = $conn->prepare($sql)) {
 }
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -258,23 +259,21 @@ $conn->close();
         <label for="higher_secondary">Higher Secondary:</label>
         <input type="text" name="higher_secondary" value="<?= htmlspecialchars($higher_secondary) ?>">
 
-        <label for="undergrade">Undergraduate::</label>
-                <select id="undergraduate" name="undergraduate">
-                    <option value="">Select Undergraduate Degree</option>
-                    <option value="BSC">B.Sc</option>
-                    <option value="BBA">BBA</option>
-                    <option value="BA">BA</option>
-                    <option value="DEGREE">Degree</option>
-                </select>
-
-                <!-- Postgraduate -->
-        <label for="post_grade">Postgraduate :</label>
-        <select id="postgraduate" name="postgraduate">
-            <option value="">Select Postgraduate Degree</option>
-            <option value="MSC">M.Sc</option>
-            <option value="MBA">MBA</option>
-            <option value="MA">MA</option>
+        <label for="undergraduate">Undergraduate Degree:</label>
+        <select id="undergraduate" name="undergraduate" required>
+            <option value="BSC" <?= ($undergrade == 'BSC') ? 'selected' : '' ?>>B.Sc</option>
+            <option value="BBA" <?= ($undergrade == 'BBA') ? 'selected' : '' ?>>BBA</option>
+            <option value="BA" <?= ($undergrade == 'BA') ? 'selected' : '' ?>>BA</option>
+            <option value="DEGREE" <?= ($undergrade == 'DEGREE') ? 'selected' : '' ?>>Degree</option>
         </select>
+
+        <label for="postgraduate">Postgraduate Degree:</label>
+        <select id="postgraduate" name="postgraduate">
+            <option value="MSC" <?= ($post_grade == 'MSC') ? 'selected' : '' ?>>M.Sc</option>
+            <option value="MBA" <?= ($post_grade == 'MBA') ? 'selected' : '' ?>>MBA</option>
+            <option value="MA" <?= ($post_grade == 'MA') ? 'selected' : '' ?>>MA</option>
+        </select>
+
 
         <!-- Address Information -->
         <h2>Address</h2>
