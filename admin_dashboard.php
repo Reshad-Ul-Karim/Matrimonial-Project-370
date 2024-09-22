@@ -15,9 +15,11 @@ $search = '';
 // Check if the search bar is used
 if (isset($_POST['search_user'])) {
     $search = mysqli_real_escape_string($conn, $_POST['search']);
-    $query = "SELECT user_id, First_Name, Last_Name, Religion, DOB, Ethnicity, Account_Status, Profile_Photo_URL FROM User WHERE First_Name LIKE '%$search%' OR Last_Name LIKE '%$search%'";
+    $query = "SELECT user_id, First_Name, Last_Name, Religion, DOB, Ethnicity, Account_Status, Profile_Photo_URL 
+              FROM User 
+              WHERE First_Name LIKE '%$search%' OR Last_Name LIKE '%$search%'";
 } else {
-    // Fetch Users from Database
+    // Fetch all users from the database
     $query = "SELECT user_id, First_Name, Last_Name, Religion, DOB, Ethnicity, Account_Status, Profile_Photo_URL FROM User";
 }
 
@@ -31,6 +33,9 @@ if (isset($_POST['change_status'])) {
     $query = "UPDATE User SET Account_Status = '$new_status' WHERE user_id = '$user_id'";
     if (mysqli_query($conn, $query)) {
         $success = "Status changed successfully.";
+        // Redirect to prevent form resubmission
+        header('Location: admin_dashboard.php');
+        exit();
     } else {
         $error = "Error changing status: " . mysqli_error($conn);
     }
@@ -43,6 +48,9 @@ if (isset($_POST['delete_profile'])) {
     $query = "DELETE FROM User WHERE user_id = '$user_id'";
     if (mysqli_query($conn, $query)) {
         $success = "Profile deleted successfully.";
+        // Redirect to prevent form resubmission
+        header('Location: admin_dashboard.php');
+        exit();
     } else {
         $error = "Error deleting profile: " . mysqli_error($conn);
     }
@@ -229,7 +237,7 @@ if (isset($_POST['delete_profile'])) {
                     <tr>
                         <!-- Profile Photo -->
                         <td class="profile-card">
-                            <img src="<?php echo $row['Profile_Photo_URL']; ?>" alt="Profile Photo">
+                            <img src="uploads/<?php echo $row['Profile_Photo_URL']; ?>" alt="Profile Photo">
                         </td>
                         <td><?php echo $row['First_Name'] . ' ' . $row['Last_Name']; ?></td>
                         <td><?php echo $row['Religion']; ?></td>
@@ -241,9 +249,9 @@ if (isset($_POST['delete_profile'])) {
                             <form action="admin_dashboard.php" method="post" style="display:inline;">
                                 <input type="hidden" name="user_id" value="<?php echo $row['user_id']; ?>">
                                 <select name="new_status">
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-
+                                    <option value="Active" <?php echo ($row['Account_Status'] == 'Active') ? 'selected' : ''; ?>>Active</option>
+                                    <option value="Inactive" <?php echo ($row['Account_Status'] == 'Inactive') ? 'selected' : ''; ?>>Inactive</option>
+                                    <option value="Suspended" <?php echo ($row['Account_Status'] == 'Suspended') ? 'selected' : ''; ?>>Suspended</option>
                                 </select>
                                 <button type="submit" name="change_status">Change Status</button>
                             </form>
